@@ -1,38 +1,78 @@
 /*
  * jquery.navigator
- * 
+ *
  *
  * Copyright (c) 2014 Rubens Mariuzzo
  * Licensed under the MIT license.
  */
 
-(function ($) {
+/* globals define */
 
-  // Collection method.
-  $.fn.awesome = function () {
-    return this.each(function (i) {
-      // Do something awesome to each selected element.
-      $(this).html('awesome' + i);
+(function(factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery'], factory);
+  } else {
+    // Browser globals
+    factory(jQuery);
+  }
+
+}(function($) {
+
+  //-------------//
+  // Constructor //
+  //-------------//
+
+  var Navigator = function(context) {
+    this.context = context;
+  };
+
+  //---------//
+  // Methods //
+  //---------//
+
+  Navigator.prototype.enable = function() {
+    // TODO
+  };
+
+  Navigator.prototype.disable = function() {
+    // TODO
+  };
+
+  Navigator.prototype.toggle = function() {
+    // TODO
+  };
+
+  //--------------------------//
+  // jQuery plugin definition //
+  //--------------------------//
+
+  var old = $.fn.navigator;
+
+  $.fn.navigator = function(method) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return this.each(function() {
+      var $this = $(this),
+        data = $this.data('navigator');
+      if (!data) {
+        $this.data('navigator', (data = new Navigator($this, typeof method === 'object' && method)));
+      }
+      if (typeof method === 'string' && data[method]) {
+        data[method].apply(data, args);
+      }
     });
   };
 
-  // Static method.
-  $.awesome = function (options) {
-    // Override default options with passed-in options.
-    options = $.extend({}, $.awesome.options, options);
-    // Return something awesome.
-    return 'awesome' + options.punctuation;
+  $.fn.navigator.Constructor = Navigator;
+
+  //---------------------------//
+  // jQuery plugin no conflict //
+  //---------------------------//
+
+  $.fn.navigator.noConflict = function() {
+    $.fn.navigator = old;
+    return this;
   };
 
-  // Static method default options.
-  $.awesome.options = {
-    punctuation: '.'
-  };
-
-  // Custom selector.
-  $.expr[':'].awesome = function (elem) {
-    // Is this element awesome?
-    return $(elem).text().indexOf('awesome') !== -1;
-  };
-
-}(jQuery));
+}));

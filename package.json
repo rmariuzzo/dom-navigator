@@ -1,7 +1,7 @@
 {
-  "name": "jquerynavigator",
+  "name": "jquery.navigator",
   "version": "1.0.0",
-  "description": "Navigator jQuery plugin",
+  "description": "jQuery plugin that allow keyboard navigation through DOM elements (←↑→↓).",
   "keywords": [
     "jquery-plugin"
   ],
@@ -16,11 +16,9 @@
     "type": "git",
     "url": "https://github.com/rmariuzzo/jquerynavigator.git"
   },
-  "licenses": [
-    {
-      "type": "MIT"
-    }
-  ],
+  "licenses": [{
+    "type": "MIT"
+  }],
   "devDependencies": {
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-qunit": "~0.3.0",
