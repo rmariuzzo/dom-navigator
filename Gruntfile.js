@@ -1,24 +1,30 @@
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
+
   // Load all grunt tasks
   require('load-grunt-tasks')(grunt);
+
   // Show elapsed time at the end
   require('time-grunt')(grunt);
 
   // Project configuration.
   grunt.initConfig({
+
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
+
     banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed MIT */\n',
+
     // Task configuration.
     clean: {
       files: ['dist']
     },
+
     concat: {
       options: {
         banner: '<%= banner %>',
@@ -29,6 +35,7 @@ module.exports = function (grunt) {
         dest: 'dist/jquery.<%= pkg.name %>.js'
       }
     },
+
     uglify: {
       options: {
         banner: '<%= banner %>'
@@ -38,6 +45,7 @@ module.exports = function (grunt) {
         dest: 'dist/jquery.<%= pkg.name %>.min.js'
       }
     },
+
     qunit: {
       all: {
         options: {
@@ -45,6 +53,7 @@ module.exports = function (grunt) {
         }
       }
     },
+
     jshint: {
       options: {
         reporter: require('jshint-stylish')
@@ -68,6 +77,7 @@ module.exports = function (grunt) {
         src: ['test/**/*.js']
       }
     },
+
     watch: {
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
@@ -82,6 +92,7 @@ module.exports = function (grunt) {
         tasks: ['jshint:test', 'qunit']
       }
     },
+
     connect: {
       server: {
         options: {
@@ -93,11 +104,24 @@ module.exports = function (grunt) {
   });
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'connect', 'qunit', 'clean', 'concat', 'uglify']);
-  grunt.registerTask('server', function () {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve']);
-  });
-  grunt.registerTask('serve', ['connect', 'watch']);
-  grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
+  grunt.registerTask('default', [
+    'jshint',
+    'connect',
+    'qunit',
+    'clean',
+    'concat',
+    'uglify'
+  ]);
+
+  grunt.registerTask('serve', [
+    'connect',
+    'watch'
+  ]);
+
+  grunt.registerTask('test', [
+    'jshint',
+    'connect',
+    'qunit'
+  ]);
+
 };
