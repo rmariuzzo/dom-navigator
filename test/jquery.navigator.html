@@ -9,13 +9,26 @@
   <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
   <script src="../bower_components/qunit/qunit/qunit.js"></script>
   <!-- Load local lib and tests. -->
-  <link rel="stylesheet" href="jquery.navigator.css">
   <script src="../src/jquery.navigator.js"></script>
   <script src="jquery.navigator_test.js"></script>
   <!-- Removing access to jQuery and $. But it'll still be available as _$, if
        you REALLY want to mess around with jQuery in the console. REMEMBER WE
        ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
   <script>window._$ = jQuery.noConflict(true);</script>
+  <script>
+    _$(function() {
+      if (window.location.href.indexOf("show_fixture=true") > -1) {
+        _$("#qunit-fixture").css({
+          height: "",
+          width: "",
+          left: 0,
+          top: 0,
+          backgroundColor: "#FFF",
+          border: "solid"
+        });
+      }
+    });
+  </script>
 </head>
 <body>
   <div id="qunit"></div>
