@@ -13,11 +13,11 @@
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define([], function() {
-      return factory(jQuery);
+      return factory(window.jQuery);
     });
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(window.jQuery);
   }
 
 }(function($) {
@@ -119,9 +119,7 @@
       var top = this.$selected.offsetTop;
 
       var next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
-        curr = $(curr);
-        var currDistance = curr.position();
-        currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top);
+        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
         if (currDistance < prev.distance) {
           return {
             distance: currDistance,
@@ -145,9 +143,7 @@
       var top = this.$selected.offsetTop - 1;
 
       var next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
-        curr = $(curr);
-        var currDistance = curr.position();
-        currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top);
+        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
         if (currDistance < prev.distance) {
           return {
             distance: currDistance,
@@ -171,9 +167,7 @@
       var top = this.$selected.offsetTop;
 
       var next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
-        curr = $(curr);
-        var currDistance = curr.position();
-        currDistance = Math.abs(currDistance.left - left) + Math.abs(currDistance.top - top);
+        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
         if (currDistance < prev.distance) {
           return {
             distance: currDistance,
@@ -197,9 +191,7 @@
       var top = this.$selected.offsetTop + this.$selected.offsetHeight;
 
       var next = this.elementsAfter(0, top).reduce(function(prev, curr) {
-        curr = $(curr);
-        var currDistance = curr.position();
-        currDistance = Math.abs(currDistance.left - left) + Math.abs(currDistance.top - top);
+        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
         if (currDistance < prev.distance) {
           return {
             distance: currDistance,
