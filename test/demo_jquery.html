@@ -2,13 +2,16 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Dom Navigator Demo</title>
+  <title>Navigator jQuery plugin Demo</title>
+  <!-- Load local jQuery. -->
+  <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <!-- Load local lib and tests. -->
   <link rel="stylesheet" href="main.css">
   <script src="../src/dom-navigator.js"></script>
   <script>
-    window.onload = function() {
-      new DomNavigator(document.querySelector('ul'));
-    };
+    $(function() {
+      $('ul').domNavigator();
+    });
   </script>
 </head>
 <body>
