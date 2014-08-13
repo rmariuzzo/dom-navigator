@@ -25,7 +25,7 @@ Vanilla JavaScript:
 
 ```js
 var el = document.querySelector('#grid');
-var nav = new DomNavigator(el);
+new DomNavigator(el);
 ```
 
 If jQuery is included you can use the library as a jQuery plugin:
