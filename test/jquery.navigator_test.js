@@ -1,25 +1,4 @@
 (function($) {
-  /*
-    ======== A Handy Little QUnit Reference ========
-    http://api.qunitjs.com/
-
-    Test methods:
-      module(name, {[setup][ ,teardown]})
-      test(name, callback)
-      expect(numberOfAssertions)
-      stop(increment)
-      start(decrement)
-    Test assertions:
-      ok(value, [message])
-      equal(actual, expected, [message])
-      notEqual(actual, expected, [message])
-      deepEqual(actual, expected, [message])
-      notDeepEqual(actual, expected, [message])
-      strictEqual(actual, expected, [message])
-      notStrictEqual(actual, expected, [message])
-      throws(block, [expected], [message])
-  */
-
 
   var lifecycle = {
     setup: function() {
@@ -60,7 +39,42 @@
   });
 
   test('is instantiable', function() {
-    ok(this.target.data('navigator'), 'should have an instance');
+    ok(this.target[0].navigator, 'should have an instance');
+  });
+
+  module('jQuery#navigator("select")', lifecycle);
+
+  test('exists', function() {
+    ok($.fn.navigator.Constructor.prototype.select, 'should exist');
+  });
+
+  test('select given element', function() {
+    var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
+    this.target.children().each(function(i, el) {
+      $(el).parent().navigator('select', el);
+      ok($(el).is(selected), 'DOM element should be selected');
+    });
+    this.target.children().each(function(i, el) {
+      el = $(el);
+      el.parent().navigator('select', el);
+      ok(el.is(selected), 'jQuery element should be selected');
+    });
+  });
+
+  module('jQuery#navigator("selected")', lifecycle);
+
+  test('exists', function() {
+    ok($.fn.navigator.Constructor.prototype.selected, 'should exist');
+  });
+
+  test('return expected values', function() {
+    ok(this.target.navigator('selected') === null, 'should return null after initialization');
+    var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
+    this.target.children().each(function(i, el) {
+      el = $(el);
+      el.parent().navigator('select', el);
+      ok(el.is(selected), 'should select the given element');
+    });
   });
 
   module('jQuery#navigator("left")', lifecycle);
@@ -87,11 +101,11 @@
 
     for (var x = 0; x <= 2; x++) {
       var from = 2 + (x * 3);
-      this.target.navigator('select', this.target.children().eq(from));
+      this.target.navigator('select', this.target.children().get(from));
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from - y);
         simulateKeydown(document, left);
-        ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
+        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.target.navigator('selected').textContent);
       }
     }
   });
@@ -124,7 +138,7 @@
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from - (y * 3));
         simulateKeydown(document, up);
-        ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
+        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.target.navigator('selected').textContent);
       }
     }
   });
@@ -158,7 +172,7 @@
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from + y);
         simulateKeydown(document, right);
-        ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
+        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.target.navigator('selected').textContent);
       }
     }
   });
@@ -192,45 +206,20 @@
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from + (y * 3));
         simulateKeydown(document, down);
-        ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
+        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.target.navigator('selected').textContent);
       }
     }
   });
 
-  module('jQuery#navigator("selected")', lifecycle);
+  module('jQuery#navigator("destroy")', lifecycle);
 
   test('exists', function() {
-    ok($.fn.navigator.Constructor.prototype.selected, 'should exist');
+    ok($.fn.navigator.Constructor.prototype.destroy, 'should exist');
   });
 
-  test('return expected values', function() {
-    ok(this.target.navigator('selected') === null, 'should return null after initialization');
-    var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
-    this.target.children().each(function(i, el) {
-      el = $(el);
-      el.parent().navigator('select', el);
-      ok(el.is(selected), 'should select the given element');
-    });
+  test('destroy instance attached to DOM', function() {
+    this.target.navigator('destroy');
+    ok(!this.target[0].navigator, 'should not have any instance attached: ' + this.target[0].navigator);
   });
-
-  module('jQuery#navigator("select")', lifecycle);
-
-  test('exists', function() {
-    ok($.fn.navigator.Constructor.prototype.select, 'should exist');
-  });
-
-  test('select given element', function() {
-    var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
-    this.target.children().each(function(i, el) {
-      $(el).parent().navigator('select', el);
-      ok($(el).is(selected), 'DOM element should be selected');
-    });
-    this.target.children().each(function(i, el) {
-      el = $(el);
-      el.parent().navigator('select', el);
-      ok(el.is(selected), 'jQuery element should be selected');
-    });
-  });
-
 
 }(jQuery));

@@ -12,7 +12,9 @@
 
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery'], factory);
+    define([], function() {
+      return factory(jQuery);
+    });
   } else {
     // Browser globals
     factory(jQuery);
@@ -42,21 +44,19 @@
     return out;
   }
 
-  function addEventListener(el, eventName, handler) {
-    if (el.addEventListener) {
-      el.addEventListener(eventName, handler);
+  function addClass(el, className) {
+    if (el.classList) {
+      el.classList.add(className);
     } else {
-      el.attachEvent('on' + eventName, function() {
-        handler.call(el);
-      });
+      el.className += ' ' + className;
     }
   }
 
-  function removeEventListener(el, eventName, handler) {
-    if (el.removeEventListener) {
-      el.removeEventListener(eventName, handler);
+  function removeClass(el, className) {
+    if (el.classList) {
+      el.classList.remove(className);
     } else {
-      el.detachEvent('on' + eventName, handler);
+      el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     }
   }
 
@@ -95,26 +95,28 @@
     this.$keydownHandler = function(event) {
       self.handleKeydown.call(self, event);
     };
-    addEventListener(this.$doc, 'keydown', this.$keydownHandler);
+    this.$doc.addEventListener('keydown', this.$keydownHandler);
   };
 
   Navigator.prototype.disable = function() {
     if (this.$keydownHandler) {
-      removeEventListener(this.$doc, 'keydown', this.$keydownHandler);
+      this.$doc.removeEventListener('keydown', this.$keydownHandler);
     }
   };
 
   Navigator.prototype.destroy = function() {
     this.disable();
-    this.$element.removeData('navigator');
+    if (this.$element.navigator) {
+      delete this.$element.navigator;
+    }
   };
 
   Navigator.prototype.left = function() {
     if (!this.$selected) {
-      this.select(this.$element.children().eq(0));
+      this.select(this.elements()[0]);
     } else {
-      var left = this.$selected.position().left - 1;
-      var top = this.$selected.position().top;
+      var left = this.$selected.offsetLeft - 1;
+      var top = this.$selected.offsetTop;
 
       var next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
         curr = $(curr);
@@ -137,10 +139,10 @@
 
   Navigator.prototype.up = function() {
     if (!this.$selected) {
-      this.select(this.$element.children().eq(0));
+      this.select(this.elements()[0]);
     } else {
-      var left = this.$selected.position().left;
-      var top = this.$selected.position().top - 1;
+      var left = this.$selected.offsetLeft;
+      var top = this.$selected.offsetTop - 1;
 
       var next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
         curr = $(curr);
@@ -163,10 +165,10 @@
 
   Navigator.prototype.right = function() {
     if (!this.$selected) {
-      this.select(this.$element.children().eq(0));
+      this.select(this.elements()[0]);
     } else {
-      var left = this.$selected.position().left + this.$selected.width();
-      var top = this.$selected.position().top;
+      var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
+      var top = this.$selected.offsetTop;
 
       var next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
         curr = $(curr);
@@ -189,10 +191,10 @@
 
   Navigator.prototype.down = function() {
     if (!this.$selected) {
-      this.select(this.$element.children().eq(0));
+      this.select(this.elements()[0]);
     } else {
-      var left = this.$selected.position().left;
-      var top = this.$selected.position().top + this.$selected.height();
+      var left = this.$selected.offsetLeft;
+      var top = this.$selected.offsetTop + this.$selected.offsetHeight;
 
       var next = this.elementsAfter(0, top).reduce(function(prev, curr) {
         curr = $(curr);
@@ -218,29 +220,41 @@
   };
 
   Navigator.prototype.select = function(element) {
-    element = $(element);
-    if (element.length && element !== this.$selected) {
+    if (element && element !== this.$selected) {
+      // Unbox element from jQuery or array.
+      if (element.jquery || Array.isArray(element)) {
+        element = element[0];
+      }
       // Unselect previous element.
       if (this.$selected) {
-        this.$selected.removeClass(this.$options.selected);
+        removeClass(this.$selected, this.$options.selected);
       }
       // Select given element.
-      element.addClass(this.$options.selected);
+      addClass(element, this.$options.selected);
       this.$selected = element;
     }
   };
 
+  Navigator.prototype.elements = function() {
+    var children = [];
+    for (var i = this.$element.children.length; i--;) {
+      // Skip comment nodes on IE8
+      if (this.$element.children[i].nodeType !== 8) {
+        children.unshift(this.$element.children[i]);
+      }
+    }
+    return children;
+  };
+
   Navigator.prototype.elementsAfter = function(left, top) {
-    return $.grep(this.$element.children(), function(el) {
-      var pos = $(el).position();
-      return pos.left >= left && pos.top >= top;
+    return this.elements().filter(function(el) {
+      return el.offsetLeft >= left && el.offsetTop >= top;
     });
   };
 
   Navigator.prototype.elementsBefore = function(left, top) {
-    return $.grep(this.$element.children(), function(el) {
-      var pos = $(el).position();
-      return pos.left <= left && pos.top <= top;
+    return this.elements().filter(function(el) {
+      return el.offsetLeft <= left && el.offsetTop <= top;
     });
   };
 
@@ -255,47 +269,47 @@
   // jQuery plugin definition //
   //--------------------------//
 
-  var old = $.fn.navigator;
+  if ($) {
 
-  $.fn.navigator = function(method) {
+    var old = $.fn.navigator;
 
-    // Parse arguments.
-    var args = Array.prototype.slice.call(arguments, 1);
-    var retval;
+    $.fn.navigator = function(method) {
 
-    this.each(function() {
+      // Parse arguments.
+      var args = Array.prototype.slice.call(arguments, 1);
+      var retval;
 
-      var $this = $(this),
-        instance = $this.data('navigator');
+      this.each(function() {
 
-      // Create Navigator instance.
-      if (!instance) {
-        $this.data('navigator', (instance = new Navigator($this, typeof method === 'object' && method)));
+        // Create Navigator instance.
+        if (!this.navigator) {
+          this.navigator = new Navigator(this, typeof method === 'object' && method);
+        }
+
+        // Invoke given method with given arguments.
+        if (typeof method === 'string' && this.navigator[method]) {
+          retval = this.navigator[method].apply(this.navigator, args);
+        }
+
+      });
+
+      if (retval === undefined) {
+        retval = this;
       }
 
-      // Invoke given method with given arguments.
-      if (typeof method === 'string' && instance[method]) {
-        retval = instance[method].apply(instance, args);
-      }
+      return retval;
+    };
 
-    });
+    $.fn.navigator.Constructor = Navigator;
 
-    if (retval === undefined) {
-      retval = this;
-    }
+    //---------------------------//
+    // jQuery plugin no conflict //
+    //---------------------------//
 
-    return retval;
-  };
-
-  $.fn.navigator.Constructor = Navigator;
-
-  //---------------------------//
-  // jQuery plugin no conflict //
-  //---------------------------//
-
-  $.fn.navigator.noConflict = function() {
-    $.fn.navigator = old;
-    return this;
-  };
+    $.fn.navigator.noConflict = function() {
+      $.fn.navigator = old;
+      return this;
+    };
+  }
 
 }));
