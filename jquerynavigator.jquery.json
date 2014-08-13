@@ -1,0 +1,26 @@
+{
+  "name": "navigator",
+  "title": "Navigator jQuery plugin",
+  "description": "jQuery plugin that allow keyboard navigation through DOM elements (←↑→↓).",
+  "version": "1.0.0",
+  "homepage": "https://github.com/rmariuzzo/jquery-navigator",
+  "author": {
+    "name": "Rubens Mariuzzo",
+    "url": "https://github.com/rmariuzzo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rmariuzzo/jquery-navigator"
+  },
+  "bugs": "https://github.com/rmariuzzo/jquery-navigator/issues",
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/MIT"
+  }],
+  "dependencies": {
+    "jquery": "latest"
+  },
+  "keywords": [
+    "jquery-plugin"
+  ]
+}

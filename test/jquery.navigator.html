@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Navigator jQuery plugin Test Suite</title>
+  <!-- Load local jQuery.
+  <script src="../bower_components/jquery/dist/jquery.js"></script>-->
+  <!-- load remote jquery -->
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  
+  <!-- Load local QUnit. -->
+  <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
+  <script src="../bower_components/qunit/qunit/qunit.js"></script>
+  <!-- Load local lib and tests. -->
+  <link rel="stylesheet" href="jquery.navigator.css">
+  <script src="../src/jquery.navigator.js"></script>
+  <script src="jquery.navigator_test.js"></script>
+  <!-- Removing access to jQuery and $. But it'll still be available as _$, if
+       you REALLY want to mess around with jQuery in the console. REMEMBER WE
+       ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
+  <script>window._$ = jQuery.noConflict(true);</script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <ul>
+      <li class="item-0">0</li>
+      <li class="item-1">1</li>
+      <li class="item-2">2</li>
+      <li class="item-3">3</li>
+      <li class="item-4">4</li>
+      <li class="item-5">5</li>
+      <li class="item-6">6</li>
+      <li class="item-7">7</li>
+      <li class="item-8">8</li>
+    </ul>
+  </div>
+</body>
+</html>
