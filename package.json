@@ -1,12 +1,12 @@
 {
-  "name": "jquery.navigator",
+  "name": "DOMNavigator",
   "version": "1.0.0",
-  "description": "jQuery plugin that allow keyboard navigation through DOM elements (←↑→↓).",
+  "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
   "keywords": [
-    "jquery-plugin"
+    "dom", "navigator", "navigaton"
   ],
-  "homepage": "https://github.com/rmariuzzo/jquerynavigator",
-  "bugs": "https://github.com/rmariuzzo/jquery-navigator/issues",
+  "homepage": "https://github.com/rmariuzzo/DOMNavigator",
+  "bugs": "https://github.com/rmariuzzo/DOMNavigator/issues",
   "author": {
     "name": "Rubens Mariuzzo",
     "email": "rubens@mariuzzo.com",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rmariuzzo/jquerynavigator.git"
+    "url": "https://github.com/rmariuzzo/DOMNavigator.git"
   },
   "licenses": [{
     "type": "MIT"

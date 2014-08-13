@@ -2,19 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Navigator jQuery plugin Test Suite</title>
-  <!-- Load local jQuery. -->
+  <title>DOM Navigator Test Suite</title>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
-  <!-- Load local QUnit. -->
   <link rel="stylesheet" href="../bower_components/qunit/qunit/qunit.css" media="screen">
   <script src="../bower_components/qunit/qunit/qunit.js"></script>
-  <!-- Load local lib and tests. -->
-  <link rel="stylesheet" href="jquery.navigator.css">
-  <script src="../src/jquery.navigator.js"></script>
-  <script src="jquery.navigator_test.js"></script>
-  <!-- Removing access to jQuery and $. But it'll still be available as _$, if
-       you REALLY want to mess around with jQuery in the console. REMEMBER WE
-       ARE TESTING A PLUGIN HERE, THIS HELPS ENSURE BEST PRACTICES. REALLY. -->
+  <link rel="stylesheet" href="main.css">
+  <script src="../src/domnavigator.js"></script>
+  <script src="main_test_standard.js"></script>
+  <script src="main_test_jquery.js"></script>
   <script>window._$ = jQuery.noConflict(true);</script>
 </head>
 <body>
