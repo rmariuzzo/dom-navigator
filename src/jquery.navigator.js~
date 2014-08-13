@@ -19,29 +19,6 @@
   }
 
 }(function($) {
-  
-  //-------------//
-  //  Utilities  //
-  //-------------//
-  
-  function isInRange(from, to, angle) {
-    var _from  = from  % (2 * Math.PI),
-        _to    = to    % (2 * Math.PI),
-        _angle = angle % (2 * Math.PI);
-    
-    if (_from  < 0) _from  += (2 * Math.PI);
-    if (_to    < 0) _to    += (2 * Math.PI);
-    if (_angle < 0) _angle += (2 * Math.PI);
-    if (_from === _to) {
-      if (to > from)
-          return true; // whole circle
-      return _angle === _from; // exact only
-    }
-    if (_to < _from)
-      return _angle <= _to || from <= _angle; // _angle outside range
-    
-    return _from <= _angle && _angle <= _to;    // _angle inside range
-  }
 
   //-------------//
   // Constructor //
@@ -61,10 +38,10 @@
     up: 38,
     right: 39,
     down: 40,
-    upAngleRange: [1.25 * Math.PI, 1.75  * Math.PI],    //
-    rightAngleRange: [1.75 * Math.PI, 0.25 * Math.PI], // This is defining matematicly what
-    downAngleRange: [0.25 * Math.PI, 0.75 * Math.PI],  // is up and what is down, etc
-    leftAngleRange: [0.75 * Math.PI, 1.25 * Math.PI]  //
+		upAngleRange: [1.75 *Math.pi, 0.2499999999999999999 * Math.pi],    //
+		rightAngleRange: [0.25 * Math.pi, 0.7499999999999999999* Math.pi], // This is defining matematicly what
+		downAngleRange: [0.75 *Math.pi, 1.2499999999999999999 * Math.pi],  // is up and what is down, etc
+		leftAngleRange: [1.25 *Math.pi, 1.7499999999999999999  * Math.pi]  //
   };
 
   //---------//
@@ -104,21 +81,12 @@
     } else {
       var left = this.$selected.position().left - 1;
       var top = this.$selected.position().top;
-      var $this = this; //inside the reduce callback this == window
+
       var next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
         curr = $(curr);
         var currDistance = curr.position();
-        // define the top and left for futher calcs
-        var currtop = currDistance.top - top;
-        var currleft = currDistance.left - left;
-        //currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top); // Not mathematiclly correct
-        currDistance = Math.sqrt(Math.pow(currleft, 2) + Math.pow(currtop, 2)); // Mathematiclly correct
-        // Determinate the relative angle of the element, so whe can decide if it is at left
-        
-        var angle = Math.atan(currtop / currleft);
-        angle = angle === 0 ? (currleft < 0 ? Math.PI : 0) : angle; 
-        
-        if (currDistance < prev.distance && isInRange($this.$options.leftAngleRange[0], $this.$options.leftAngleRange[1], angle)) {
+        currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top);
+        if (currDistance < prev.distance) {
           return {
             distance: currDistance,
             element: curr
@@ -139,20 +107,12 @@
     } else {
       var left = this.$selected.position().left;
       var top = this.$selected.position().top - 1;
-      var $this = this; //inside the reduce callback this == window
+
       var next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
         curr = $(curr);
         var currDistance = curr.position();
-        // define the top and left for futher calcs
-        var currtop = currDistance.top - top;
-        var currleft = currDistance.left - left;
-        //currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top); // Not mathematiclly correct
-        currDistance = Math.sqrt(Math.pow(currleft, 2) + Math.pow(currtop, 2)); // Mathematiclly correct
-        // Determinate the relative angle of the element, so whe can decide if it is at left
-        var angle = Math.atan(currtop / currleft);
-        angle = angle === 0 ? (currleft < 0 ? Math.PI : 0) : angle; 
-        
-        if (currDistance < prev.distance && isInRange($this.$options.upAngleRange[0], $this.$options.upAngleRange[1], angle)) {
+        currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top);
+        if (currDistance < prev.distance) {
           return {
             distance: currDistance,
             element: curr
@@ -171,23 +131,14 @@
     if (!this.$selected) {
       this.select(this.$element.children().eq(0));
     } else {
-      var left = this.$selected.position().left;// + this.$selected.width(); //this makes ignore things that are 0px after the item
+      var left = this.$selected.position().left + this.$selected.width();
       var top = this.$selected.position().top;
-      var $this = this; //inside the reduce callback this == window
+
       var next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
         curr = $(curr);
         var currDistance = curr.position();
-        // define the top and left for futher calcs
-        var currtop = currDistance.top - top;
-        var currleft = currDistance.left - left;
-        //currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top); // Not mathematiclly correct
-        currDistance = Math.sqrt(Math.pow(currleft, 2) + Math.pow(currtop, 2)); // Mathematiclly correct
-        // Determinate the relative angle of the element, so whe can decide if it is at left
-        var angle = Math.atan(currtop / currleft);
-        angle = angle === 0 ? (currleft < 0 ? Math.PI : 0) : angle; 
-        
-        
-        if (currDistance < prev.distance && isInRange($this.$options.rightAngleRange[0], $this.$options.rightAngleRange[1], angle)) {
+        currDistance = Math.abs(currDistance.left - left) + Math.abs(currDistance.top - top);
+        if (currDistance < prev.distance) {
           return {
             distance: currDistance,
             element: curr
@@ -207,21 +158,13 @@
       this.select(this.$element.children().eq(0));
     } else {
       var left = this.$selected.position().left;
-      var top = this.$selected.position().top;// + this.$selected.height(); //this makes ignore things that are 0px after the item
-      var $this = this; //inside the reduce callback this == window
+      var top = this.$selected.position().top + this.$selected.height();
+
       var next = this.elementsAfter(0, top).reduce(function(prev, curr) {
         curr = $(curr);
         var currDistance = curr.position();
-        // define the top and left for futher calcs
-        var currtop = currDistance.top - top;
-        var currleft = currDistance.left - left;
-        //currDistance = Math.abs(left - currDistance.left) + Math.abs(top - currDistance.top); // Not mathematiclly correct
-        currDistance = Math.sqrt(Math.pow(currleft, 2) + Math.pow(currtop, 2)); // Mathematiclly correct
-        // Determinate the relative angle of the element, so whe can decide if it is at left
-        var angle = Math.atan(currtop / currleft);
-        angle = angle === 0 ? (currleft < 0 ? Math.PI : 0) : angle; 
-       
-        if (currDistance < prev.distance && isInRange($this.$options.downAngleRange[0], $this.$options.downAngleRange[1], angle)) {
+        currDistance = Math.abs(currDistance.left - left) + Math.abs(currDistance.top - top);
+        if (currDistance < prev.distance) {
           return {
             distance: currDistance,
             element: curr
