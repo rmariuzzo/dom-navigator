@@ -55,6 +55,7 @@
     // Bind keydown event.
     var instance = this;
     this.$document.bind('keydown', function(event) {
+      event.preventDefault();
       if (keys[event.which]) {
         keys[event.which].call(instance);
       }
