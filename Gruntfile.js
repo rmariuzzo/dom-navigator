@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed MIT */\n',
 
-    filename: 'domnavigator',
+    filename: 'dom-navigator',
 
     // Task configuration.
     clean: {
