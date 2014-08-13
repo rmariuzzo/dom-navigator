@@ -10,3 +10,7 @@
   width: 200px;
   height: 200px;
 }
+
+#qunit-fixture li.selected {
+  background-color: red;
+}
