@@ -1,12 +1,12 @@
 {
-  "name": "DOMNavigator",
+  "name": "dom-navigator",
   "version": "1.0.0",
   "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
   "keywords": [
     "dom", "navigator", "navigaton"
   ],
-  "homepage": "https://github.com/rmariuzzo/DOMNavigator",
-  "bugs": "https://github.com/rmariuzzo/DOMNavigator/issues",
+  "homepage": "https://github.com/rmariuzzo/dom-navigator",
+  "bugs": "https://github.com/rmariuzzo/dom-navigator/issues",
   "author": {
     "name": "Rubens Mariuzzo",
     "email": "rubens@mariuzzo.com",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rmariuzzo/DOMNavigator.git"
+    "url": "https://github.com/rmariuzzo/dom-navigator.git"
   },
   "licenses": [{
     "type": "MIT"
