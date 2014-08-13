@@ -8,22 +8,30 @@ Installation
 
 Using bower:
 
-    bower install domnavigator --save
+```
+bower install domnavigator --save
+```
 
 Using NPM:
 
-    npm install domnavigator --save
+```
+npm install domnavigator --save
+```
 
 Usage
 =====
 
 Vanilla JavaScript:
 
-    var el = document.querySelector('#grid');
-    var nav = new DomNavigator(el);
+```js
+var el = document.querySelector('#grid');
+var nav = new DomNavigator(el);
+```
 
 If jQuery is included you can use the library as a jQuery plugin:
 
-    var el = $('#grid');
-    el.domNavigator();
+```js
+var el = $('#grid');
+el.domNavigator();
+```
 
