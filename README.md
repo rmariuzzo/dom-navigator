@@ -8,14 +8,14 @@ Installation
 
 Using bower:
 
-```
-bower install domnavigator --save
+```sh
+bower install dom-navigator --save
 ```
 
 Using NPM:
 
-```
-npm install domnavigator --save
+```sh
+npm install dom-navigator --save
 ```
 
 Usage
