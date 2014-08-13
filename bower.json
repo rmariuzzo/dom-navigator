@@ -1,7 +1,25 @@
 {
   "name": "DOMNavigator",
   "version": "1.0.0",
-  "main": "src/domnavigator.js",
+  "main": "dist/domnavigator.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "*.md",
+    "*.jquery.json",
+    "test",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "keywords": [
+    "domnavigator",
+    "javascript",
+    "js",
+    "dom",
+    "navigator",
+    "navigation",
+    "jquery"
+  ],
   "dependencies": {},
   "devDependencies": {
     "qunit": "~1.12.0",
