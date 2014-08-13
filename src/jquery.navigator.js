@@ -20,15 +20,61 @@
 
 }(function($) {
 
+  //-------------------//
+  // Utilities methods //
+  //-------------------//
+
+  function extend(out) {
+    out = out || {};
+
+    for (var i = 1; i < arguments.length; i++) {
+      if (!arguments[i]) {
+        continue;
+      }
+
+      for (var key in arguments[i]) {
+        if (arguments[i].hasOwnProperty(key)) {
+          out[key] = arguments[i][key];
+        }
+      }
+    }
+
+    return out;
+  }
+
+  function addEventListener(el, eventName, handler) {
+    if (el.addEventListener) {
+      el.addEventListener(eventName, handler);
+    } else {
+      el.attachEvent('on' + eventName, function() {
+        handler.call(el);
+      });
+    }
+  }
+
+  function removeEventListener(el, eventName, handler) {
+    if (el.removeEventListener) {
+      el.removeEventListener(eventName, handler);
+    } else {
+      el.detachEvent('on' + eventName, handler);
+    }
+  }
+
   //-------------//
   // Constructor //
   //-------------//
 
   var Navigator = function(element, options) {
-    this.$document = $(document);
+    this.$doc = window.document;
     this.$element = element;
-    this.$options = $.extend({}, Navigator.defaults, options);
+    this.$options = extend({}, Navigator.defaults, options);
     this.$selected = null;
+    this.$keys = {};
+    this.$keys[this.$options.left] = this.left;
+    this.$keys[this.$options.up] = this.up;
+    this.$keys[this.$options.right] = this.right;
+    this.$keys[this.$options.down] = this.down;
+    this.$keydownHandler = null;
     this.enable();
   };
 
@@ -45,25 +91,17 @@
   //---------//
 
   Navigator.prototype.enable = function() {
-    // Create map of movement methods by keys.
-    var keys = {};
-    keys[this.$options.left] = this.left;
-    keys[this.$options.up] = this.up;
-    keys[this.$options.right] = this.right;
-    keys[this.$options.down] = this.down;
-
-    // Bind keydown event.
-    var instance = this;
-    this.$document.bind('keydown', function(event) {
-      if (keys[event.which]) {
-        event.preventDefault();
-        keys[event.which].call(instance);
-      }
-    });
+    var self = this;
+    this.$keydownHandler = function(event) {
+      self.handleKeydown.call(self, event);
+    };
+    addEventListener(this.$doc, 'keydown', this.$keydownHandler);
   };
 
   Navigator.prototype.disable = function() {
-    this.$document.unbind('keydown');
+    if (this.$keydownHandler) {
+      removeEventListener(this.$doc, 'keydown', this.$keydownHandler);
+    }
   };
 
   Navigator.prototype.destroy = function() {
@@ -204,6 +242,13 @@
       var pos = $(el).position();
       return pos.left <= left && pos.top <= top;
     });
+  };
+
+  Navigator.prototype.handleKeydown = function(event) {
+    if (this.$keys[event.which]) {
+      event.preventDefault();
+      this.$keys[event.which].call(this);
+    }
   };
 
   //--------------------------//

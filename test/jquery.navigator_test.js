@@ -30,6 +30,28 @@
     }
   };
 
+  function simulateKeydown(element, which) {
+    var event;
+
+    if (document.createEvent) {
+      event = document.createEvent("HTMLEvents");
+      event.initEvent('keydown', true, true);
+    } else {
+      event = document.createEventObject();
+      event.eventType = 'keydown';
+    }
+
+    event.eventName = 'keydown';
+    event.which = which;
+
+    if (document.createEvent) {
+      element.dispatchEvent(event);
+    } else {
+      element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  window.sss = simulateKeydown;
 
   module('jQuery#navigator', lifecycle);
 
@@ -55,13 +77,12 @@
     var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
 
     // Create keydown event.
-    var event = $.Event('keydown');
-    event.which = $.fn.navigator.Constructor.defaults.left;
+    var left = $.fn.navigator.Constructor.defaults.left;
 
-    $(document).trigger(event);
+    simulateKeydown(document, left);
     ok(this.target.children().eq(0).is(selected), 'should select first element when navigation has not started.');
 
-    $(document).trigger(event);
+    simulateKeydown(document, left);
     ok(this.target.children().eq(0).is(selected), 'should remain selected if cannot navigate to left.');
 
     for (var x = 0; x <= 2; x++) {
@@ -69,7 +90,7 @@
       this.target.navigator('select', this.target.children().eq(from));
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from - y);
-        $(document).trigger(event);
+        simulateKeydown(document, left);
         ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
       }
     }
@@ -89,13 +110,12 @@
     var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
 
     // Create keydown event.
-    var event = $.Event('keydown');
-    event.which = $.fn.navigator.Constructor.defaults.up;
+    var up = $.fn.navigator.Constructor.defaults.up;
 
-    $(document).trigger(event);
+    simulateKeydown(document, up);
     ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
 
-    $(document).trigger(event);
+    simulateKeydown(document, up);
     ok(this.target.children().eq(0).is(selected), 'The 1st element should remain selected if already selected.');
 
     for (var x = 6; x <= 8; x++) {
@@ -103,7 +123,7 @@
       this.target.navigator('select', this.target.children().eq(from));
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from - (y * 3));
-        $(document).trigger(event);
+        simulateKeydown(document, up);
         ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
       }
     }
@@ -123,13 +143,12 @@
     var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
 
     // Create keydown event.
-    var event = $.Event('keydown');
-    event.which = $.fn.navigator.Constructor.defaults.right;
+    var right = $.fn.navigator.Constructor.defaults.right;
 
-    $(document).trigger(event);
+    simulateKeydown(document, right);
     ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
 
-    $(document).trigger(event);
+    simulateKeydown(document, right);
     ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
     ok(this.target.children().eq(1).is(selected), 'The 2nd element should be selected when navigating to the right from 1st element.');
 
@@ -138,7 +157,7 @@
       this.target.navigator('select', this.target.children().eq(from));
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from + y);
-        $(document).trigger(event);
+        simulateKeydown(document, right);
         ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
       }
     }
@@ -158,13 +177,12 @@
     var selected = '.' + $.fn.navigator.Constructor.defaults.selected;
 
     // Create keydown event.
-    var event = $.Event('keydown');
-    event.which = $.fn.navigator.Constructor.defaults.down;
+    var down = $.fn.navigator.Constructor.defaults.down;
 
-    $(document).trigger(event);
+    simulateKeydown(document, down);
     ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
 
-    $(document).trigger(event);
+    simulateKeydown(document, down);
     ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
     ok(this.target.children().eq(3).is(selected), 'The 4th element should be selected when navigating to the down from 1st element.');
 
@@ -173,7 +191,7 @@
       this.target.navigator('select', this.target.children().eq(from));
       for (var y = 1; y <= 2; y++) {
         var el = this.target.children().eq(from + (y * 3));
-        $(document).trigger(event);
+        simulateKeydown(document, down);
         ok(el.is(selected), 'should select: ' + el.text() + ', selected: ' + this.target.navigator('selected').text());
       }
     }
