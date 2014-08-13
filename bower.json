@@ -1,6 +1,7 @@
 {
-  "name": "jquery.navigator",
+  "name": "DOMNavigator",
   "version": "1.0.0",
+  "main": "src/domnavigator.js",
   "dependencies": {},
   "devDependencies": {
     "qunit": "~1.12.0",

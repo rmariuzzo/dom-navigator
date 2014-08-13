@@ -1,5 +1,5 @@
 /*
- * jquery.navigator
+ * DOM Navigator
  *
  *
  * Copyright (c) 2014 Rubens Mariuzzo
@@ -106,8 +106,8 @@
 
   Navigator.prototype.destroy = function() {
     this.disable();
-    if (this.$element.navigator) {
-      delete this.$element.navigator;
+    if (this.$element.domNavigator) {
+      delete this.$element.domNavigator;
     }
   };
 
@@ -265,15 +265,21 @@
     }
   };
 
+  //------------------------//
+  // Export Navigator class //
+  //------------------------//
+
+  window.DomNavigator = Navigator;
+
   //--------------------------//
   // jQuery plugin definition //
   //--------------------------//
 
   if ($) {
 
-    var old = $.fn.navigator;
+    var old = $.fn.domNavigator;
 
-    $.fn.navigator = function(method) {
+    $.fn.domNavigator = function(method) {
 
       // Parse arguments.
       var args = Array.prototype.slice.call(arguments, 1);
@@ -282,13 +288,13 @@
       this.each(function() {
 
         // Create Navigator instance.
-        if (!this.navigator) {
-          this.navigator = new Navigator(this, typeof method === 'object' && method);
+        if (!this.domNavigator) {
+          this.domNavigator = new Navigator(this, typeof method === 'object' && method);
         }
 
         // Invoke given method with given arguments.
-        if (typeof method === 'string' && this.navigator[method]) {
-          retval = this.navigator[method].apply(this.navigator, args);
+        if (typeof method === 'string' && this.domNavigator[method]) {
+          retval = this.domNavigator[method].apply(this.domNavigator, args);
         }
 
       });
@@ -300,14 +306,14 @@
       return retval;
     };
 
-    $.fn.navigator.Constructor = Navigator;
+    $.fn.domNavigator.Constructor = Navigator;
 
     //---------------------------//
     // jQuery plugin no conflict //
     //---------------------------//
 
-    $.fn.navigator.noConflict = function() {
-      $.fn.navigator = old;
+    $.fn.domNavigator.noConflict = function() {
+      $.fn.domNavigator = old;
       return this;
     };
   }

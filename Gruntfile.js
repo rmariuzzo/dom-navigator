@@ -20,6 +20,8 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed MIT */\n',
 
+    filename: 'domnavigator',
+
     // Task configuration.
     clean: {
       files: ['dist']
@@ -31,8 +33,8 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['src/<%= pkg.name %>.js'],
-        dest: 'dist/jquery.<%= pkg.name %>.js'
+        src: ['src/<%= filename %>.js'],
+        dest: 'dist/<%= filename %>.js'
       }
     },
 
@@ -42,14 +44,14 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/jquery.<%= pkg.name %>.min.js'
+        dest: 'dist/<%= filename %>.min.js'
       }
     },
 
     qunit: {
       all: {
         options: {
-          urls: ['http://localhost:9000/test/<%= pkg.name %>.html']
+          urls: ['http://localhost:9000/test/main.html']
         }
       }
     },
