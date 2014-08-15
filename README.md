@@ -53,7 +53,7 @@ All help are more than welcome!
 
  1. **[Fork](https://github.com/rmariuzzo/dom-navigator/fork)** this respository.
  2. **Clone** your fork and create a feature branch from develop.
-        git clone git@github.com:<your-username>/checkboxes.js.git
+        git clone git@github.com:<your-username>/dom-navigator.git
         git fetch origin
         git checkout develop
         git checkout -b feature-<super-power>
