@@ -86,6 +86,13 @@
     down: 40
   };
 
+  var DIRECTION = {
+    left: 'left',
+    up: 'up',
+    right: 'right',
+    down: 'down'
+  };
+
   //---------//
   // Methods //
   //---------//
@@ -131,7 +138,7 @@
         distance: Infinity
       });
 
-      this.select(next.element);
+      this.select(next.element, DIRECTION.left);
     }
   };
 
@@ -155,7 +162,7 @@
         distance: Infinity
       });
 
-      this.select(next.element);
+      this.select(next.element, DIRECTION.up);
     }
   };
 
@@ -179,7 +186,7 @@
         distance: Infinity
       });
 
-      this.select(next.element);
+      this.select(next.element, DIRECTION.right);
     }
   };
 
@@ -203,7 +210,7 @@
         distance: Infinity
       });
 
-      this.select(next.element);
+      this.select(next.element, DIRECTION.down);
     }
   };
 
@@ -211,7 +218,7 @@
     return this.$selected;
   };
 
-  Navigator.prototype.select = function(element) {
+  Navigator.prototype.select = function(element, direction) {
     if (element && element !== this.$selected) {
       // Unbox element from jQuery or array.
       if (element.jquery || Array.isArray(element)) {
@@ -221,10 +228,64 @@
       if (this.$selected) {
         removeClass(this.$selected, this.$options.selected);
       }
+      // Scroll to given element.
+      this.focus(element, direction);
       // Select given element.
       addClass(element, this.$options.selected);
       this.$selected = element;
     }
+  };
+
+  /**
+   * Focus an element by scrolling the container.
+   *
+   * @param el {Element} The element to focus.
+   * @param direction {String} The direction of the current navigation.
+   *
+   * @return void.
+   */
+  Navigator.prototype.focus = function(el, direction) {
+    if (!this.inContainerViewport(el)) {
+      switch (direction) {
+        case DIRECTION.left:
+          break;
+        case DIRECTION.up:
+          this.$element.scrollTop = el.offsetTop - this.$element.offsetTop;
+          break;
+        case DIRECTION.right:
+          break;
+        case DIRECTION.down:
+          this.$element.scrollTop = el.offsetTop - this.$element.offsetTop - (this.$element.offsetHeight - el.offsetHeight);
+          break;
+      }
+    }
+  };
+
+  /**
+   * Indicate if an element is in the viewport.
+   *
+   * @param el {Element} The element to check.
+   *
+   * @return {Boolean} true if the given element is in the viewport, otherwise false.
+   */
+  Navigator.prototype.inContainerViewport = function(el) {
+    // Check on left side.
+    if (el.offsetLeft - this.$element.scrollLeft < this.$element.offsetLeft) {
+      return false;
+    }
+    // Check on top side.
+    if (el.offsetTop - this.$element.scrollTop < this.$element.offsetTop) {
+      return false;
+    }
+    // Check on right side.
+    if ((el.offsetLeft + el.offsetWidth - this.$element.scrollLeft) > (this.$element.offsetLeft + this.$element.offsetWidth)) {
+      return false;
+    }
+    // Check on down side.
+    if ((el.offsetTop + el.offsetHeight - this.$element.scrollTop) > (this.$element.offsetTop + this.$element.offsetHeight)) {
+      return false;
+    }
+    return true;
   };
 
   Navigator.prototype.elements = function() {
