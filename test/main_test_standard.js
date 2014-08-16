@@ -81,7 +81,21 @@
     ok(DomNavigator.prototype.inContainerViewport, 'should exist');
   });
 
-  // TODO more test needed.
+  test('should return expected values', function() {
+    var domNavigator = this.domNavigator;
+    var contTop = this.target[0].offsetTop;
+    var contBottom = contTop + this.target[0].offsetHeight;
+    var contScroll = this.target[0].scrollTop;
+
+    this.target.children().each(function(i, el) {
+      var elTop = el.offsetTop;
+      var elBottom = elTop + el.offsetHeight;
+      var expected = elTop - contScroll >= contTop;
+
+      expected = expected && elBottom - contScroll <= contBottom;
+      ok(domNavigator.inContainerViewport(el) === expected, 'should return: ' + expected + ' for element: ' + el.textContent);
+    });
+  });
 
   module('DomNavigator.left()', lifecycle);
 
