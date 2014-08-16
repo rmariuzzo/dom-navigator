@@ -64,20 +64,31 @@
   // Constructor //
   //-------------//
 
+  /**
+   * Create a new DOM Navigator.
+   *
+   * @param container {Element} The container of the element to navigate.
+   * @param options {Object} The options to configure the DOM navigator.
+   *
+   * @return void.
+   */
   var Navigator = function(container, options) {
     this.$doc = window.document;
-    this.$container = element;
+    this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
     this.$selected = null;
+    this.$keydownHandler = null;
     this.$keys = {};
     this.$keys[this.$options.left] = this.left;
     this.$keys[this.$options.up] = this.up;
     this.$keys[this.$options.right] = this.right;
     this.$keys[this.$options.down] = this.down;
-    this.$keydownHandler = null;
     this.enable();
   };
 
+  /**
+   * Defaults options.
+   */
   Navigator.defaults = {
     selected: 'selected',
     left: 37,
@@ -86,6 +97,9 @@
     down: 40
   };
 
+  /**
+   * Direction constants.
+   */
   var DIRECTION = {
     left: 'left',
     up: 'up',
@@ -97,6 +111,11 @@
   // Methods //
   //---------//
 
+  /**
+   * Enable this navigator.
+   *
+   * @return void.
+   */
   Navigator.prototype.enable = function() {
     var self = this;
     this.$keydownHandler = function(event) {
@@ -105,12 +124,22 @@
     this.$doc.addEventListener('keydown', this.$keydownHandler);
   };
 
+  /**
+   * Disable this navigator.
+   *
+   * @return void.
+   */
   Navigator.prototype.disable = function() {
     if (this.$keydownHandler) {
       this.$doc.removeEventListener('keydown', this.$keydownHandler);
     }
   };
 
+  /**
+   * Destroy this navigator removing any event registered and any other data.
+   *
+   * @return void.
+   */
   Navigator.prototype.destroy = function() {
     this.disable();
     if (this.$container.domNavigator) {
@@ -118,6 +147,11 @@
     }
   };
 
+  /**
+   * Navigate left to the next element if any.
+   *
+   * @return void.
+   */
   Navigator.prototype.left = function() {
     if (!this.$selected) {
       this.select(this.elements()[0]);
@@ -142,6 +176,11 @@
     }
   };
 
+  /**
+   * Navigate up to the next element if any.
+   *
+   * @return void.
+   */
   Navigator.prototype.up = function() {
     if (!this.$selected) {
       this.select(this.elements()[0]);
@@ -166,6 +205,11 @@
     }
   };
 
+  /**
+   * Navigate right to the next element if any.
+   *
+   * @return void.
+   */
   Navigator.prototype.right = function() {
     if (!this.$selected) {
       this.select(this.elements()[0]);
@@ -190,6 +234,9 @@
     }
   };
 
+  /**
+   * Navigate down to the next element if any.
+   */
   Navigator.prototype.down = function() {
     if (!this.$selected) {
       this.select(this.elements()[0]);
@@ -214,26 +261,40 @@
     }
   };
 
+  /**
+   * Return the selected DOM element.
+   *
+   * @return {Element} The selected DOM element.
+   */
   Navigator.prototype.selected = function() {
     return this.$selected;
   };
 
-  Navigator.prototype.select = function(element, direction) {
-    if (element && element !== this.$selected) {
-      // Unbox element from jQuery or array.
-      if (element.jquery || Array.isArray(element)) {
-        element = element[0];
-      }
-      // Unselect previous element.
-      if (this.$selected) {
-        removeClass(this.$selected, this.$options.selected);
-      }
-      // Scroll to given element.
-      this.focus(element, direction);
-      // Select given element.
-      addClass(element, this.$options.selected);
-      this.$selected = element;
+  /**
+   * Select the given element.
+   *
+   * @param el {Element} The DOM element to select.
+   *
+   * @return void
+   */
+  Navigator.prototype.select = function(el, direction) {
+    // Is there an element or is it selected?
+    if (!el || el === this.$selected) {
+      return; // Nothing to do here.
     }
+    // Unbox element from jQuery or array.
+    if (el.jquery || Array.isArray(el)) {
+      el = el[0];
+    }
+    // Unselect previous element.
+    if (this.$selected) {
+      removeClass(this.$selected, this.$options.selected);
+    }
+    // Scroll to given element.
+    this.focus(el, direction);
+    // Select given element.
+    addClass(el, this.$options.selected);
+    this.$selected = el;
   };
 
   /**
@@ -248,11 +309,13 @@
     if (!this.inContainerViewport(el)) {
       switch (direction) {
         case DIRECTION.left:
+          // TODO.
           break;
         case DIRECTION.up:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
           break;
         case DIRECTION.right:
+          // TODO.
           break;
         case DIRECTION.down:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
@@ -262,11 +325,11 @@
   };
 
   /**
-   * Indicate if an element is in the viewport.
+   * Indicate if an element is in the container viewport.
    *
    * @param el {Element} The element to check.
    *
-   * @return {Boolean} true if the given element is in the viewport, otherwise false.
+   * @return {Boolean} true if the given element is in the container viewport, otherwise false.
    */
   Navigator.prototype.inContainerViewport = function(el) {
     // Check on left side.
@@ -288,6 +351,11 @@
     return true;
   };
 
+  /**
+   * Return an array of the navigable elements.
+   *
+   * @return {Array} An array of elements.
+   */
   Navigator.prototype.elements = function() {
     var children = [];
     for (var i = this.$container.children.length; i--;) {
@@ -299,18 +367,41 @@
     return children;
   };
 
+  /**
+   * Return an array of navigable elements after an offset.
+   *
+   * @param left {Integer} The left offset.
+   * @param top {Integer} The top offset.
+   *
+   * @return {Array} An array of elements.
+   */
   Navigator.prototype.elementsAfter = function(left, top) {
     return this.elements().filter(function(el) {
       return el.offsetLeft >= left && el.offsetTop >= top;
     });
   };
 
+  /**
+   * Return an array of navigable elements before an offset.
+   *
+   * @param left {Integer} The left offset.
+   * @param top {Integer} The top offset.
+   *
+   * @return {Array} An array of elements.
+   */
   Navigator.prototype.elementsBefore = function(left, top) {
     return this.elements().filter(function(el) {
       return el.offsetLeft <= left && el.offsetTop <= top;
     });
   };
 
+  /**
+   * Handle the keydown event.
+   *
+   * @param {Event} The event object.
+   *
+   * @return void.
+   */
   Navigator.prototype.handleKeydown = function(event) {
     if (this.$keys[event.which]) {
       event.preventDefault();
