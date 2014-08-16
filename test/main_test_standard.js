@@ -75,6 +75,14 @@
     });
   });
 
+  module('DomNavigator.inContainerViewport()', lifecycle);
+
+  test('exists', function() {
+    ok(DomNavigator.prototype.inContainerViewport, 'should exist');
+  });
+
+  // TODO more test needed.
+
   module('DomNavigator.left()', lifecycle);
 
   test('exists', function() {
