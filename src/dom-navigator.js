@@ -291,21 +291,21 @@
       removeClass(this.$selected, this.$options.selected);
     }
     // Scroll to given element.
-    this.focus(el, direction);
+    this.scrollTo(el, direction);
     // Select given element.
     addClass(el, this.$options.selected);
     this.$selected = el;
   };
 
   /**
-   * Focus an element by scrolling the container.
+   * Scroll the container to an element.
    *
-   * @param el {Element} The element to focus.
+   * @param el {Element} The destination element.
    * @param direction {String} The direction of the current navigation.
    *
    * @return void.
    */
-  Navigator.prototype.focus = function(el, direction) {
+  Navigator.prototype.scrollTo = function(el, direction) {
     if (!this.inContainerViewport(el)) {
       switch (direction) {
         case DIRECTION.left:
