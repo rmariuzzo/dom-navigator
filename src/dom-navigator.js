@@ -64,9 +64,9 @@
   // Constructor //
   //-------------//
 
-  var Navigator = function(element, options) {
+  var Navigator = function(container, options) {
     this.$doc = window.document;
-    this.$element = element;
+    this.$container = element;
     this.$options = extend({}, Navigator.defaults, options);
     this.$selected = null;
     this.$keys = {};
@@ -113,8 +113,8 @@
 
   Navigator.prototype.destroy = function() {
     this.disable();
-    if (this.$element.domNavigator) {
-      delete this.$element.domNavigator;
+    if (this.$container.domNavigator) {
+      delete this.$container.domNavigator;
     }
   };
 
@@ -250,12 +250,12 @@
         case DIRECTION.left:
           break;
         case DIRECTION.up:
-          this.$element.scrollTop = el.offsetTop - this.$element.offsetTop;
+          this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
           break;
         case DIRECTION.right:
           break;
         case DIRECTION.down:
-          this.$element.scrollTop = el.offsetTop - this.$element.offsetTop - (this.$element.offsetHeight - el.offsetHeight);
+          this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
           break;
       }
     }
@@ -270,19 +270,19 @@
    */
   Navigator.prototype.inContainerViewport = function(el) {
     // Check on left side.
-    if (el.offsetLeft - this.$element.scrollLeft < this.$element.offsetLeft) {
+    if (el.offsetLeft - this.$container.scrollLeft < this.$container.offsetLeft) {
       return false;
     }
     // Check on top side.
-    if (el.offsetTop - this.$element.scrollTop < this.$element.offsetTop) {
+    if (el.offsetTop - this.$container.scrollTop < this.$container.offsetTop) {
       return false;
     }
     // Check on right side.
-    if ((el.offsetLeft + el.offsetWidth - this.$element.scrollLeft) > (this.$element.offsetLeft + this.$element.offsetWidth)) {
+    if ((el.offsetLeft + el.offsetWidth - this.$container.scrollLeft) > (this.$container.offsetLeft + this.$container.offsetWidth)) {
       return false;
     }
     // Check on down side.
-    if ((el.offsetTop + el.offsetHeight - this.$element.scrollTop) > (this.$element.offsetTop + this.$element.offsetHeight)) {
+    if ((el.offsetTop + el.offsetHeight - this.$container.scrollTop) > (this.$container.offsetTop + this.$container.offsetHeight)) {
       return false;
     }
     return true;
@@ -290,10 +290,10 @@
 
   Navigator.prototype.elements = function() {
     var children = [];
-    for (var i = this.$element.children.length; i--;) {
+    for (var i = this.$container.children.length; i--;) {
       // Skip comment nodes on IE8
-      if (this.$element.children[i].nodeType !== 8) {
-        children.unshift(this.$element.children[i]);
+      if (this.$container.children[i].nodeType !== 8) {
+        children.unshift(this.$container.children[i]);
       }
     }
     return children;

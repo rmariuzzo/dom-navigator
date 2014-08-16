@@ -1,4 +1,4 @@
-/*! dom-navigator - v1.0.0 - 2014-08-14
+/*! dom-navigator - v1.0.0 - 2014-08-16
 * https://github.com/rmariuzzo/dom-navigator
 * Copyright (c) 2014 Rubens Mariuzzo; Licensed MIT */
 /* globals define */
