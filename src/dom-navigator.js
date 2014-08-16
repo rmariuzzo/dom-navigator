@@ -60,6 +60,20 @@
     }
   }
 
+  /**
+   * Unbox an object from jQuery or array.
+   *
+   * @param obj {Object} The object to unbox.
+   *
+   * @return {Element} An element.
+   */
+  function unboxElement(obj) {
+    if (obj.jquery || Array.isArray(obj)) {
+      return obj[0];
+    }
+    return obj;
+  }
+
   //-------------//
   // Constructor //
   //-------------//
@@ -282,10 +296,7 @@
     if (!el || el === this.$selected) {
       return; // Nothing to do here.
     }
-    // Unbox element from jQuery or array.
-    if (el.jquery || Array.isArray(el)) {
-      el = el[0];
-    }
+    el = unboxElement(el);
     // Unselect previous element.
     if (this.$selected) {
       removeClass(this.$selected, this.$options.selected);
@@ -332,6 +343,7 @@
    * @return {Boolean} true if the given element is in the container viewport, otherwise false.
    */
   Navigator.prototype.inContainerViewport = function(el) {
+    el = unboxElement(el);
     // Check on left side.
     if (el.offsetLeft - this.$container.scrollLeft < this.$container.offsetLeft) {
       return false;

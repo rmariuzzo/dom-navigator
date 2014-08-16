@@ -77,6 +77,29 @@
     });
   });
 
+  module('jQuery#domNavigator("inContainerViewport", ...)', lifecycle);
+
+  test('exists', function() {
+    ok($.fn.domNavigator.Constructor.prototype.inContainerViewport, 'should exist');
+  });
+
+  test('should return expected values', function() {
+    var target = this.target;
+    var contTop = this.target.position().top;
+    var contBottom = contTop + this.target.height();
+    var contScroll = this.target.scrollTop();
+
+    this.target.children().each(function(i, el) {
+      el = $(el);
+      var elTop = el.position().top;
+      var elBottom = elTop + el.height();
+      var expected = elTop - contScroll >= contTop;
+
+      expected = expected && elBottom - contScroll <= contBottom;
+      ok(target.domNavigator("inContainerViewport", el) === expected, 'should return: ' + expected + ' for element: ' + el.text());
+    });
+  });
+
   module('jQuery#domNavigator("left")', lifecycle);
 
   test('exists', function() {
