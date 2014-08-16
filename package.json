@@ -1,6 +1,6 @@
 {
   "name": "dom-navigator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
   "keywords": [
     "dom", "navigator", "navigaton"
