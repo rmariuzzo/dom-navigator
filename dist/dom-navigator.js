@@ -1,4 +1,4 @@
-/*! dom-navigator - v1.0.1 - 2014-08-16
+/*! dom-navigator - v1.0.1 - 2014-08-18
 * https://github.com/rmariuzzo/dom-navigator
 * Copyright (c) 2014 Rubens Mariuzzo; Licensed MIT */
 /* globals define */
@@ -96,17 +96,6 @@
   };
 
   /**
-   * Defaults options.
-   */
-  Navigator.defaults = {
-    selected: 'selected',
-    left: 37,
-    up: 38,
-    right: 39,
-    down: 40
-  };
-
-  /**
    * Direction constants.
    */
   var DIRECTION = {
@@ -114,6 +103,26 @@
     up: 'up',
     right: 'right',
     down: 'down'
+  };
+
+  /**
+   * Navigation mode constants.
+   */
+  var MODE = {
+    auto: 'auto',
+    horizontal: 'horizontal'
+  };
+
+  /**
+   * Defaults options.
+   */
+  Navigator.defaults = {
+    mode: MODE.auto,
+    selected: 'selected',
+    left: 37,
+    up: 38,
+    right: 39,
+    down: 40
   };
 
   //---------//
@@ -162,27 +171,46 @@
    * @return void.
    */
   Navigator.prototype.left = function() {
-    if (!this.$selected) {
-      this.select(this.elements()[0]);
-    } else {
-      var left = this.$selected.offsetLeft - 1;
-      var top = this.$selected.offsetTop;
+    var next = null;
 
-      var next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
-        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-        if (currDistance < prev.distance) {
-          return {
-            distance: currDistance,
-            element: curr
-          };
+    switch (this.$options.mode) {
+
+      case MODE.auto:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
         }
-        return prev;
-      }, {
-        distance: Infinity
-      });
 
-      this.select(next.element, DIRECTION.left);
+        var left = this.$selected.offsetLeft - 1;
+        var top = this.$selected.offsetTop;
+
+        next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
+          var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+          if (currDistance < prev.distance) {
+            return {
+              distance: currDistance,
+              element: curr
+            };
+          }
+          return prev;
+        }, {
+          distance: Infinity
+        });
+        next = next.element;
+        break;
+
+      case MODE.horizontal:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected.previousElementSibling;
+        break;
     }
+
+    this.select(next, DIRECTION.left);
+
   };
 
   /**
@@ -191,27 +219,39 @@
    * @return void.
    */
   Navigator.prototype.up = function() {
-    if (!this.$selected) {
-      this.select(this.elements()[0]);
-    } else {
-      var left = this.$selected.offsetLeft;
-      var top = this.$selected.offsetTop - 1;
+    var next = null;
 
-      var next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
-        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-        if (currDistance < prev.distance) {
-          return {
-            distance: currDistance,
-            element: curr
-          };
+    switch (this.$options.mode) {
+
+      case MODE.auto:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
         }
-        return prev;
-      }, {
-        distance: Infinity
-      });
 
-      this.select(next.element, DIRECTION.up);
+        var left = this.$selected.offsetLeft;
+        var top = this.$selected.offsetTop - 1;
+
+        next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
+          var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+          if (currDistance < prev.distance) {
+            return {
+              distance: currDistance,
+              element: curr
+            };
+          }
+          return prev;
+        }, {
+          distance: Infinity
+        });
+        next = next.element;
+        break;
+
+      case MODE.horizontal:
+        break;
     }
+
+    this.select(next, DIRECTION.up);
   };
 
   /**
@@ -220,54 +260,84 @@
    * @return void.
    */
   Navigator.prototype.right = function() {
-    if (!this.$selected) {
-      this.select(this.elements()[0]);
-    } else {
-      var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
-      var top = this.$selected.offsetTop;
+    var next = null;
 
-      var next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
-        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-        if (currDistance < prev.distance) {
-          return {
-            distance: currDistance,
-            element: curr
-          };
+    switch (this.$options.mode) {
+
+      case MODE.auto:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
         }
-        return prev;
-      }, {
-        distance: Infinity
-      });
 
-      this.select(next.element, DIRECTION.right);
+        var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
+        var top = this.$selected.offsetTop;
+
+        next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
+          var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+          if (currDistance < prev.distance) {
+            return {
+              distance: currDistance,
+              element: curr
+            };
+          }
+          return prev;
+        }, {
+          distance: Infinity
+        });
+        next = next.element;
+        break;
+
+      case MODE.horizontal:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected.nextElementSibling;
+        break;
     }
+
+    this.select(next, DIRECTION.right);
   };
 
   /**
    * Navigate down to the next element if any.
    */
   Navigator.prototype.down = function() {
-    if (!this.$selected) {
-      this.select(this.elements()[0]);
-    } else {
-      var left = this.$selected.offsetLeft;
-      var top = this.$selected.offsetTop + this.$selected.offsetHeight;
+    var next = null;
 
-      var next = this.elementsAfter(0, top).reduce(function(prev, curr) {
-        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-        if (currDistance < prev.distance) {
-          return {
-            distance: currDistance,
-            element: curr
-          };
+    switch (this.$options.mode) {
+
+      case MODE.auto:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
         }
-        return prev;
-      }, {
-        distance: Infinity
-      });
 
-      this.select(next.element, DIRECTION.down);
+        var left = this.$selected.offsetLeft;
+        var top = this.$selected.offsetTop + this.$selected.offsetHeight;
+
+        next = this.elementsAfter(0, top).reduce(function(prev, curr) {
+          var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+          if (currDistance < prev.distance) {
+            return {
+              distance: currDistance,
+              element: curr
+            };
+          }
+          return prev;
+        }, {
+          distance: Infinity
+        });
+        next = next.element;
+        break;
+
+      case MODE.horizontal:
+        break;
     }
+
+    this.select(next, DIRECTION.down);
   };
 
   /**
@@ -315,13 +385,13 @@
     if (!this.inContainerViewport(el)) {
       switch (direction) {
         case DIRECTION.left:
-          // TODO.
+          this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
           break;
         case DIRECTION.up:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
           break;
         case DIRECTION.right:
-          // TODO.
+          this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
           break;
         case DIRECTION.down:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
