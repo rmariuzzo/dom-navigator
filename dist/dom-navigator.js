@@ -110,7 +110,8 @@
    */
   var MODE = {
     auto: 'auto',
-    horizontal: 'horizontal'
+    horizontal: 'horizontal',
+    vertical: 'vertical'
   };
 
   /**
@@ -207,6 +208,9 @@
 
         next = this.$selected.previousElementSibling;
         break;
+
+      case MODE.vertical:
+        break;
     }
 
     this.select(next, DIRECTION.left);
@@ -248,6 +252,15 @@
         break;
 
       case MODE.horizontal:
+        break;
+
+      case MODE.vertical:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected.previousElementSibling;
         break;
     }
 
@@ -296,6 +309,9 @@
 
         next = this.$selected.nextElementSibling;
         break;
+
+      case MODE.vertical:
+        break;
     }
 
     this.select(next, DIRECTION.right);
@@ -334,6 +350,15 @@
         break;
 
       case MODE.horizontal:
+        break;
+
+      case MODE.vertical:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected.nextElementSibling;
         break;
     }
 
