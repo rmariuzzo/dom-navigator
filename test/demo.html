@@ -7,8 +7,8 @@
   <script src="../src/dom-navigator.js"></script>
   <script>
     window.onload = function() {
-      new DomNavigator(document.querySelector('ul'), {
-        mode: 'vertical'
+      window.domNavigator = new DomNavigator(document.querySelector('ul'), {
+        mode: 'grid'
       });
     };
   </script>

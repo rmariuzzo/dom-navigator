@@ -90,14 +90,7 @@
     this.$doc = window.document;
     this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
-    this.$selected = null;
-    this.$keydownHandler = null;
-    this.$keys = {};
-    this.$keys[this.$options.left] = this.left;
-    this.$keys[this.$options.up] = this.up;
-    this.$keys[this.$options.right] = this.right;
-    this.$keys[this.$options.down] = this.down;
-    this.enable();
+    this.init();
   };
 
   /**
@@ -116,7 +109,8 @@
   var MODE = {
     auto: 'auto',
     horizontal: 'horizontal',
-    vertical: 'vertical'
+    vertical: 'vertical',
+    grid: 'grid'
   };
 
   /**
@@ -128,12 +122,59 @@
     left: 37,
     up: 38,
     right: 39,
-    down: 40
+    down: 40,
+    cols: 0
   };
 
   //---------//
   // Methods //
   //---------//
+
+  /**
+   * Initialize the navigator.
+   */
+  Navigator.prototype.init = function() {
+    this.validateOptions();
+    this.$selected = null;
+    this.$keydownHandler = null;
+
+    // Create hotkeys map.
+    this.$keys = {};
+    this.$keys[this.$options.left] = this.left;
+    this.$keys[this.$options.up] = this.up;
+    this.$keys[this.$options.right] = this.right;
+    this.$keys[this.$options.down] = this.down;
+
+    // Calculate cols if needed for grid mode.
+    if (this.$options.mode === MODE.grid && !this.$options.cols) {
+      var els = this.elements();
+      var count = [];
+      for (var i = 0; i < els.length; i++) {
+        if (i > 0 && count[i - 1] !== els[i].offsetTop) {
+          break;
+        }
+        count[i] = els[i].offsetTop;
+      }
+      this.$options.cols = count.length;
+    }
+
+    this.enable();
+  };
+
+  /**
+   * Validate current options.
+   *
+   * @return void.
+   */
+  Navigator.prototype.validateOptions = function() {
+    var validMode = false;
+    for (var m in MODE) {
+      validMode = validMode || this.$options.mode === MODE[m];
+    }
+    if (!validMode) {
+      throw new Error('Unsupported navigation mode: ' + this.$options.mode);
+    }
+  };
 
   /**
    * Enable this navigator.
@@ -216,6 +257,19 @@
 
       case MODE.vertical:
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        var index = this.elements().indexOf(this.$selected);
+        if (index % this.$options.cols !== 0) {
+          next = this.$selected.previousElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.left);
@@ -267,6 +321,19 @@
 
         next = this.$selected.previousElementSibling;
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected;
+        for (var i = 0; i < this.$options.cols; i++) {
+          next = next && next.previousElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.up);
@@ -317,6 +384,19 @@
 
       case MODE.vertical:
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        var index = this.elements().indexOf(this.$selected);
+        if (index === 0 || (index + 1) % this.$options.cols !== 0) {
+          next = this.$selected.nextElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.right);
@@ -364,6 +444,19 @@
         }
 
         next = this.$selected.nextElementSibling;
+        break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected;
+        for (var i = 0; i < this.$options.cols; i++) {
+          next = next && next.nextElementSibling;
+        }
+
         break;
     }
 
