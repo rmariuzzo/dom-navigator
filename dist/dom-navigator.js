@@ -1,4 +1,4 @@
-/*! dom-navigator - v1.0.1 - 2014-08-16
+/*! dom-navigator - v1.0.1 - 2014-08-19
 * https://github.com/rmariuzzo/dom-navigator
 * Copyright (c) 2014 Rubens Mariuzzo; Licensed MIT */
 /* globals define */
@@ -67,6 +67,23 @@
       return obj[0];
     }
     return obj;
+  }
+
+  /**
+   * Indicates if a given element is fully visible in the viewport.
+   *
+   * @param el {Element} The element to check.
+   *
+   * @return {Boolean} True if the given element is fully visible in the viewport, otherwise false.
+   */
+  function inViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth
+    );
   }
 
   //-------------//
@@ -312,6 +329,7 @@
    * @return void.
    */
   Navigator.prototype.scrollTo = function(el, direction) {
+    el = unboxElement(el);
     if (!this.inContainerViewport(el)) {
       switch (direction) {
         case DIRECTION.left:
@@ -325,6 +343,21 @@
           break;
         case DIRECTION.down:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
+          break;
+      }
+    } else if (!inViewport(el)) {
+      switch (direction) {
+        case DIRECTION.left:
+          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft;
+          break;
+        case DIRECTION.up:
+          document.body.scrollTop = el.offsetTop - document.body.offsetTop;
+          break;
+        case DIRECTION.right:
+          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
+          break;
+        case DIRECTION.down:
+          document.body.scrollTop = el.offsetTop - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
           break;
       }
     }
