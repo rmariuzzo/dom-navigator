@@ -1,4 +1,4 @@
-/*! dom-navigator - v1.0.1 - 2014-08-18
+/*! dom-navigator - v1.0.1 - 2014-08-19
 * https://github.com/rmariuzzo/dom-navigator
 * Copyright (c) 2014 Rubens Mariuzzo; Licensed MIT */
 /* globals define */
@@ -69,6 +69,23 @@
     return obj;
   }
 
+  /**
+   * Indicates if a given element is fully visible in the viewport.
+   *
+   * @param el {Element} The element to check.
+   *
+   * @return {Boolean} True if the given element is fully visible in the viewport, otherwise false.
+   */
+  function inViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= window.innerHeight &&
+      rect.right <= window.innerWidth
+    );
+  }
+
   //-------------//
   // Constructor //
   //-------------//
@@ -85,14 +102,7 @@
     this.$doc = window.document;
     this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
-    this.$selected = null;
-    this.$keydownHandler = null;
-    this.$keys = {};
-    this.$keys[this.$options.left] = this.left;
-    this.$keys[this.$options.up] = this.up;
-    this.$keys[this.$options.right] = this.right;
-    this.$keys[this.$options.down] = this.down;
-    this.enable();
+    this.init();
   };
 
   /**
@@ -111,7 +121,8 @@
   var MODE = {
     auto: 'auto',
     horizontal: 'horizontal',
-    vertical: 'vertical'
+    vertical: 'vertical',
+    grid: 'grid'
   };
 
   /**
@@ -123,12 +134,59 @@
     left: 37,
     up: 38,
     right: 39,
-    down: 40
+    down: 40,
+    cols: 0
   };
 
   //---------//
   // Methods //
   //---------//
+
+  /**
+   * Initialize the navigator.
+   */
+  Navigator.prototype.init = function() {
+    this.validateOptions();
+    this.$selected = null;
+    this.$keydownHandler = null;
+
+    // Create hotkeys map.
+    this.$keys = {};
+    this.$keys[this.$options.left] = this.left;
+    this.$keys[this.$options.up] = this.up;
+    this.$keys[this.$options.right] = this.right;
+    this.$keys[this.$options.down] = this.down;
+
+    // Calculate cols if needed for grid mode.
+    if (this.$options.mode === MODE.grid && !this.$options.cols) {
+      var els = this.elements();
+      var count = [];
+      for (var i = 0; i < els.length; i++) {
+        if (i > 0 && count[i - 1] !== els[i].offsetTop) {
+          break;
+        }
+        count[i] = els[i].offsetTop;
+      }
+      this.$options.cols = count.length;
+    }
+
+    this.enable();
+  };
+
+  /**
+   * Validate current options.
+   *
+   * @return void.
+   */
+  Navigator.prototype.validateOptions = function() {
+    var validMode = false;
+    for (var m in MODE) {
+      validMode = validMode || this.$options.mode === MODE[m];
+    }
+    if (!validMode) {
+      throw new Error('Unsupported navigation mode: ' + this.$options.mode);
+    }
+  };
 
   /**
    * Enable this navigator.
@@ -211,6 +269,19 @@
 
       case MODE.vertical:
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        var index = this.elements().indexOf(this.$selected);
+        if (index % this.$options.cols !== 0) {
+          next = this.$selected.previousElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.left);
@@ -262,6 +333,19 @@
 
         next = this.$selected.previousElementSibling;
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected;
+        for (var i = 0; i < this.$options.cols; i++) {
+          next = next && next.previousElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.up);
@@ -312,6 +396,19 @@
 
       case MODE.vertical:
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        var index = this.elements().indexOf(this.$selected);
+        if (index === 0 || (index + 1) % this.$options.cols !== 0) {
+          next = this.$selected.nextElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.right);
@@ -360,6 +457,19 @@
 
         next = this.$selected.nextElementSibling;
         break;
+
+      case MODE.grid:
+        if (!this.$selected) {
+          next = this.elements()[0];
+          break;
+        }
+
+        next = this.$selected;
+        for (var i = 0; i < this.$options.cols; i++) {
+          next = next && next.nextElementSibling;
+        }
+
+        break;
     }
 
     this.select(next, DIRECTION.down);
@@ -407,6 +517,7 @@
    * @return void.
    */
   Navigator.prototype.scrollTo = function(el, direction) {
+    el = unboxElement(el);
     if (!this.inContainerViewport(el)) {
       switch (direction) {
         case DIRECTION.left:
@@ -420,6 +531,21 @@
           break;
         case DIRECTION.down:
           this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
+          break;
+      }
+    } else if (!inViewport(el)) {
+      switch (direction) {
+        case DIRECTION.left:
+          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft;
+          break;
+        case DIRECTION.up:
+          document.body.scrollTop = el.offsetTop - document.body.offsetTop;
+          break;
+        case DIRECTION.right:
+          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
+          break;
+        case DIRECTION.down:
+          document.body.scrollTop = el.offsetTop - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
           break;
       }
     }
