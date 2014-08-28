@@ -1,104 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Siwer Media Network">
+  <meta name="author" content="Rubens Mariuzzo">
   <meta name="Description" content="JS library that allow keyboard navigation through DOM elements (←↑→↓)" />
   <title>DOM Navigator - JS library that allow keyboard navigation through DOM elements (←↑→↓)</title>
   <link href="css/styles.css" rel="stylesheet" />
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="bower_components/highlightjs/styles/monokai_sublime.css">
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300:400,700" rel="stylesheet" type="text/css">
 </head>
+
 <body>
-  <div class="header-wrapper">
-    <div class="header">
-      <div class="displaymenu">
-        <a href="javascript:void(0);"><img src="img/menu-icon.png" alt="Menu" width="40" height="40" /></a>
-      </div><!-- div.displaymenu-->
-      <ul class="menu">
-        <li><a href="index.php#top">HOME</a></li>
-        <li><a href="index.php#download" title="Download">DOWNLOAD</a></li>
-        <li><a href="index.php#github" title="Github">GITHUB</a></li>
-        <li><a href="index.php#features" title="Features">FEATURES</a></li>
-        <li><a href="index.php#demos" title="Demos">DEMOS</a></li>
-      </ul><!-- ul.menu-->
-      <div class="social">
-        <ul class="sharing">
-          <li class="gplus"><a href="#" title="Seguir en Google+"></a></li>
-          <li class="twitter"><a href="https://twitter.com/" title="Seguir en Twitter"></a></li>
-          <li class="facebook"><a href="https://www.facebook.com/" title="Seguir en Facebook"></a></li>
-        </ul><!-- div.sharing-->
-      </div><!-- div.social-->
-    </div><!-- div.header-->
-  </div><!-- div.header-wrapper-->
   <div class="banner-wrapper">
     <div class="banner">
       <div class="logo">
         <img src="img/logo-dom-navigator.png" alt="DOM Navigator" />
-        <span class="description">JS library that allow keyboard navigation through DOM elements (←↑→↓)</span><!-- span.description-->
-      </div><!-- div.logo-->
+        <span class="description">JS library that allow keyboard navigation through DOM elements (←↑→↓)</span>
+      </div>
       <div class="buttons">
         <span class="download">
           <span class="icon">
-            <span class="helper"></span><!-- span.helper--> 
+            <span class="helper"></span>
             <img src="img/download-icon.png" alt="Download" width="32" height="32" />
-          </span><!-- span.icon--> Download ZIP!
-        </span><!-- div.download-->
+            Download v1.0.2
+          </span>
+        </span>
         <span class="github">
           <span class="icon">
-            <span class="helper"></span><!-- span.helper--> 
+            <span class="helper"></span>
             <img src="img/github-icon.png" alt="Github" width="32" height="32" />
-          </span><!-- span.icon--> View in Github
-        </span><!-- div.github-->
-      </div><!-- div.buttons-->
-    </div><!-- div.banner-->
-  </div><!-- div.banner-wrapper-->
+            View in Github
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
   <div class="body-wrapper">
     <div class="body">
       <div class="table four">
         <div class="row padding1">
           <img src="img/icon1.png" alt="Icon" width="42" height="42" />
-          <h1>Maecenas sed tellus</h1>
-          <span>Nunc egestas nec mi eu volutpat. Morbi quis ullamcorper est Suspendisse malesuada.</span>
-        </div><!-- div.row-->
+          <h1>Keyboard Navigation</h1>
+        </div>
         <div class="row padding1">
           <img src="img/icon2.png" alt="Icon" width="42" height="42" />
-          <h1>Suspendi malesuads</h1>
-          <span>Cras elementum massa eget orci euismod, non aliquam leo congue eget orci euismod.</span>
-        </div><!-- div.row-->
+          <h1>Navigation Modes</h1>
+        </div>
         <div class="row padding1">
           <img src="img/icon3.png" alt="Icon" width="42" height="42" />
-          <h1>Maecenas sed tellus</h1>
-          <span>Donec vestibulum nulla nec euismod mattis. In id porttitor leo Suspendisse vitae magna quis.</span>
-        </div><!-- div.row-->
+          <h1>Simple API</h1>
+        </div>
         <div class="row padding1">
           <img src="img/icon4.png" alt="Icon" width="42" height="42" />
-          <h1>Morbi quis ullamcor</h1>
-          <span>Nunc egestas nec mi eu volutpat. Morbi quis ullamcorper est Suspendisse malesuada.</span>
-        </div><!-- div.row-->
-      </div><!-- div.table four-->
-      <br /><br />
-      <h1>Lorem ipsum dolor sit amet</h1>
+          <h1>With or Without jQuery</h1>
+        </div>
+      </div>
 
-      <div class="gray-wrapper padding2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at nulla sit amet ligula faucibus 
-      viverra vitae a sem. Ut mauris libero, lobortis eget luctus non, suscipit et lorem.</div><!-- div.gray-wrapper-->
+      <h1>Live Demo</h1>
+      
+      <pre><code>
+        var context   = document.querySelector('#context');
+        var navigator = new DomNavigator(context);
+      </code></pre>
 
-      <br /><br />
-      <h1>Lobortis eget luctus non</h1>
+      <ul id="context">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
 
-      Duis a sapien vitae nisl ultrices tempor vel vitae nisi. Curabitur sed gravida purus, quis bibendum magna. Duis dapibus ipsum vitae 
-      quam hendrerit rutrum non eget nulla. Integer in ultricies sapien.<br /><br />
+    </div>
+  </div>
 
-      Nunc egestas nec mi eu volutpat. Morbi quis ullamcorper est. Sed iaculis sem non mi consectetur, sit amet vulputate metus suscipit. 
-      Phasellus nec nisi vel sem ultrices ultrices eu id odio. Etiam et dui in augue aliquam pulvinar. Etiam at porta purus. Morbi hendrerit 
-      placerat tellus, ut rhoncus dui.
-
-    </div><!-- div.body-->
-  </div><!-- div.body-wrapper-->
   <div class="footer">
-    <div class="sign">&copy; DOM Navigator, 2014. Powered by Newton Bastardo.</div><!-- div.sign-->
-  </div><!-- div.footer-->
-  <div id="mavirasBACK" style="position: fixed; width: 100%; height: 100%; top: 0px; bottom: 0px; left: 0px; right: 0px; display: none; z-index: 4999; opacity: 0.8; background: url(img/overlay.png) repeat rgb(0, 0, 0);"></div>
-  <script src="js/script.js"></script>
+    <div class="sign">&copy; DOM Navigator, 2014. Website designed by Newton Bastardo.</div>
+  </div>
+
+  <script src="bower_components/dom-navigator/dist/dom-navigator.js"></script>
+  <script src="bower_components/highlightjs/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+    var context = document.querySelector('#context');
+    var navigator = new DomNavigator(context);
+  </script>
 </body>
+
 </html>
