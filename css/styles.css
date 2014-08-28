@@ -545,6 +545,7 @@ div.table.five div.row {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  border: 5px solid #fff;
 }
 #context:before, #context:after {
   content: " ";
@@ -554,11 +555,27 @@ div.table.five div.row {
     clear: both;
 }
 #context li {
+  box-sizing: border-box;
   float: left;
-  width: 20%;
-  height: 200px;
-  background: blue;
+  width: 5%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #444;
+  border: 5px solid #fff;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
 }
 #context li.selected {
-  background: red;
+  background: #ea911c;
+}
+
+
+div.row p {
+  text-align: left;
+  margin-bottom: 1em;
+}
+
+strong {
+  font-weight: 700;
 }

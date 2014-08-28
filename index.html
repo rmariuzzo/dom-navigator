@@ -20,20 +20,22 @@
         <span class="description">JS library that allow keyboard navigation through DOM elements (←↑→↓)</span>
       </div>
       <div class="buttons">
-        <span class="download">
-          <span class="icon">
-            <span class="helper"></span>
-            <img src="img/download-icon.png" alt="Download" width="32" height="32" />
-            Download v1.0.2
+        <a href="https://github.com/rmariuzzo/dom-navigator/releases/latest">
+          <span class="download">
+            <span class="icon">
+              <span class="helper"></span>
+              <img src="img/download-icon.png" alt="Download" width="32" height="32" />Download Latest
+            </span>
           </span>
-        </span>
-        <span class="github">
-          <span class="icon">
-            <span class="helper"></span>
-            <img src="img/github-icon.png" alt="Github" width="32" height="32" />
-            View in Github
+        </a>
+        <a href="https://github.com/rmariuzzo/dom-navigator">
+          <span class="github">
+            <span class="icon">
+              <span class="helper"></span>
+              <img src="img/github-icon.png" alt="Github" width="32" height="32" />View in Github
+            </span>
           </span>
-        </span>
+        </a>
       </div>
     </div>
   </div>
@@ -43,60 +45,44 @@
         <div class="row padding1">
           <img src="img/icon1.png" alt="Icon" width="42" height="42" />
           <h1>Keyboard Navigation</h1>
+          <p>Use the
+            <strong>arrow keys</strong>to navigate through DOM elements.</p>
+          <p>If you don't like the arrows you can configure your own key-bindings.</p>
         </div>
         <div class="row padding1">
           <img src="img/icon2.png" alt="Icon" width="42" height="42" />
           <h1>Navigation Modes</h1>
+          <p>DOM Navigator comes with
+            <strong>4</strong>navigation modes:
+            <strong>auto</strong>,
+            <strong>horizontal</strong>,
+            <strong>vertical</strong>and
+            <strong>grid</strong>.</p>
         </div>
         <div class="row padding1">
           <img src="img/icon3.png" alt="Icon" width="42" height="42" />
           <h1>Simple API</h1>
+          <p>Don't feel like navigating with the keyboard, use the
+            <strong>rich API</strong>to navigate in any direction</p>
         </div>
         <div class="row padding1">
           <img src="img/icon4.png" alt="Icon" width="42" height="42" />
           <h1>With or Without jQuery</h1>
+          <p>
+            <strong>No jQuery?</strong>Not a problem!</p>
+          <p>
+            <strong>Do you use jQuery?</strong>Use it as a plugin!</p>
         </div>
       </div>
 
-      <h1>Live Demo</h1>
-      
+      <h1>Demo: (Press ← ↑ → ↓)</h1>
+
       <pre><code>
         var context   = document.querySelector('#context');
         var navigator = new DomNavigator(context);
       </code></pre>
 
-      <ul id="context">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <ul id="context"></ul>
 
     </div>
   </div>
@@ -108,9 +94,14 @@
   <script src="bower_components/dom-navigator/dist/dom-navigator.js"></script>
   <script src="bower_components/highlightjs/highlight.pack.js"></script>
   <script>
-    hljs.initHighlightingOnLoad();
-    var context = document.querySelector('#context');
-    var navigator = new DomNavigator(context);
+  hljs.initHighlightingOnLoad();
+  var context = document.querySelector('#context');
+  for (var i = 1; i <= 500; i++) {
+    var li = document.createElement('li');
+    li.textContent = i;
+    context.appendChild(li);
+  }
+  var navigator = new DomNavigator(context);
   </script>
 </body>
 
