@@ -1,9 +1,15 @@
 {
   "name": "dom-navigator",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
   "keywords": [
-    "dom", "navigator", "navigaton"
+    "dom-navigator",
+    "javascript",
+    "js",
+    "dom",
+    "navigator",
+    "navigation",
+    "jquery"
   ],
   "homepage": "https://github.com/rmariuzzo/dom-navigator",
   "bugs": "https://github.com/rmariuzzo/dom-navigator/issues",

@@ -1,13 +1,15 @@
-/*! dom-navigator - v1.0.1 - 2014-08-19
+/*! dom-navigator - v1.0.3 - 2014-08-28
 * https://github.com/rmariuzzo/dom-navigator
 * Copyright (c) 2014 Rubens Mariuzzo; Licensed MIT */
 /* globals define */
 
-(function(factory) {
+(function (factory) {
+
+  'use strict';
 
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define([], function() {
+    define([], function () {
       return factory(window.jQuery);
     });
   } else {
@@ -15,7 +17,9 @@
     factory(window.jQuery);
   }
 
-}(function($) {
+}(function ($) {
+
+  'use strict';
 
   //-------------------//
   // Utilities methods //
@@ -39,6 +43,12 @@
     return out;
   }
 
+  /**
+   * Add a class from an element.
+   *
+   * @param el {Element} The element.
+   * @param className {String} The class.
+   */
   function addClass(el, className) {
     if (el.classList) {
       el.classList.add(className);
@@ -47,6 +57,12 @@
     }
   }
 
+  /**
+   * Remove a class from an element.
+   *
+   * @param el {Element} The element.
+   * @param className {String} The class.
+   */
   function removeClass(el, className) {
     if (el.classList) {
       el.classList.remove(className);
@@ -86,6 +102,40 @@
     );
   }
 
+  /**
+   * Return the absolute offset top of an element.
+   *
+   * @param el {Element} The element.
+   *
+   * @return {Number} The offset top.
+   */
+  function absoluteOffsetTop(el) {
+    var offsetTop = 0;
+    do {
+      if (!isNaN(el.offsetTop)) {
+        offsetTop += el.offsetTop;
+      }
+    } while ((el = el.offsetParent));
+    return offsetTop;
+  }
+
+  /**
+   * Return the absolute offset left of an element.
+   *
+   * @param el {Element} The element.
+   *
+   * @return {Number} The offset left.
+   */
+  function absoluteOffsetLeft(el) {
+    var offsetLeft = 0;
+    do {
+      if (!isNaN(el.offsetLeft)) {
+        offsetLeft += el.offsetLeft;
+      }
+    } while ((el = el.offsetParent));
+    return offsetLeft;
+  }
+
   //-------------//
   // Constructor //
   //-------------//
@@ -98,7 +148,7 @@
    *
    * @return void.
    */
-  var Navigator = function(container, options) {
+  var Navigator = function (container, options) {
     this.$doc = window.document;
     this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
@@ -145,7 +195,7 @@
   /**
    * Initialize the navigator.
    */
-  Navigator.prototype.init = function() {
+  Navigator.prototype.init = function () {
     this.validateOptions();
     this.$selected = null;
     this.$keydownHandler = null;
@@ -178,7 +228,7 @@
    *
    * @return void.
    */
-  Navigator.prototype.validateOptions = function() {
+  Navigator.prototype.validateOptions = function () {
     var validMode = false;
     for (var m in MODE) {
       validMode = validMode || this.$options.mode === MODE[m];
@@ -193,9 +243,9 @@
    *
    * @return void.
    */
-  Navigator.prototype.enable = function() {
+  Navigator.prototype.enable = function () {
     var self = this;
-    this.$keydownHandler = function(event) {
+    this.$keydownHandler = function (event) {
       self.handleKeydown.call(self, event);
     };
     this.$doc.addEventListener('keydown', this.$keydownHandler);
@@ -206,7 +256,7 @@
    *
    * @return void.
    */
-  Navigator.prototype.disable = function() {
+  Navigator.prototype.disable = function () {
     if (this.$keydownHandler) {
       this.$doc.removeEventListener('keydown', this.$keydownHandler);
     }
@@ -217,7 +267,7 @@
    *
    * @return void.
    */
-  Navigator.prototype.destroy = function() {
+  Navigator.prototype.destroy = function () {
     this.disable();
     if (this.$container.domNavigator) {
       delete this.$container.domNavigator;
@@ -229,59 +279,59 @@
    *
    * @return void.
    */
-  Navigator.prototype.left = function() {
+  Navigator.prototype.left = function () {
     var next = null;
 
     switch (this.$options.mode) {
 
-      case MODE.auto:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var left = this.$selected.offsetLeft - 1;
-        var top = this.$selected.offsetTop;
-
-        next = this.elementsBefore(left, Infinity).reduce(function(prev, curr) {
-          var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-          if (currDistance < prev.distance) {
-            return {
-              distance: currDistance,
-              element: curr
-            };
-          }
-          return prev;
-        }, {
-          distance: Infinity
-        });
-        next = next.element;
+    case MODE.auto:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.horizontal:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
+      var left = this.$selected.offsetLeft - 1;
+      var top = this.$selected.offsetTop;
+
+      next = this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
+        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+        if (currDistance < prev.distance) {
+          return {
+            distance: currDistance,
+            element: curr
+          };
         }
+        return prev;
+      }, {
+        distance: Infinity
+      });
+      next = next.element;
+      break;
 
+    case MODE.horizontal:
+      if (!this.$selected) {
+        next = this.elements()[0];
+        break;
+      }
+
+      next = this.$selected.previousElementSibling;
+      break;
+
+    case MODE.vertical:
+      break;
+
+    case MODE.grid:
+      if (!this.$selected) {
+        next = this.elements()[0];
+        break;
+      }
+
+      var index = this.elements().indexOf(this.$selected);
+      if (index % this.$options.cols !== 0) {
         next = this.$selected.previousElementSibling;
-        break;
+      }
 
-      case MODE.vertical:
-        break;
-
-      case MODE.grid:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var index = this.elements().indexOf(this.$selected);
-        if (index % this.$options.cols !== 0) {
-          next = this.$selected.previousElementSibling;
-        }
-
-        break;
+      break;
     }
 
     this.select(next, DIRECTION.left);
@@ -293,59 +343,59 @@
    *
    * @return void.
    */
-  Navigator.prototype.up = function() {
+  Navigator.prototype.up = function () {
     var next = null;
 
     switch (this.$options.mode) {
 
-      case MODE.auto:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var left = this.$selected.offsetLeft;
-        var top = this.$selected.offsetTop - 1;
-
-        next = this.elementsBefore(Infinity, top).reduce(function(prev, curr) {
-          var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-          if (currDistance < prev.distance) {
-            return {
-              distance: currDistance,
-              element: curr
-            };
-          }
-          return prev;
-        }, {
-          distance: Infinity
-        });
-        next = next.element;
+    case MODE.auto:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.horizontal:
-        break;
+      var left = this.$selected.offsetLeft;
+      var top = this.$selected.offsetTop - 1;
 
-      case MODE.vertical:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
+      next = this.elementsBefore(Infinity, top).reduce(function (prev, curr) {
+        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+        if (currDistance < prev.distance) {
+          return {
+            distance: currDistance,
+            element: curr
+          };
         }
+        return prev;
+      }, {
+        distance: Infinity
+      });
+      next = next.element;
+      break;
 
-        next = this.$selected.previousElementSibling;
+    case MODE.horizontal:
+      break;
+
+    case MODE.vertical:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.grid:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
+      next = this.$selected.previousElementSibling;
+      break;
 
-        next = this.$selected;
-        for (var i = 0; i < this.$options.cols; i++) {
-          next = next && next.previousElementSibling;
-        }
-
+    case MODE.grid:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
+
+      next = this.$selected;
+      for (var i = 0; i < this.$options.cols; i++) {
+        next = next && next.previousElementSibling;
+      }
+
+      break;
     }
 
     this.select(next, DIRECTION.up);
@@ -356,59 +406,59 @@
    *
    * @return void.
    */
-  Navigator.prototype.right = function() {
+  Navigator.prototype.right = function () {
     var next = null;
 
     switch (this.$options.mode) {
 
-      case MODE.auto:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
-        var top = this.$selected.offsetTop;
-
-        next = this.elementsAfter(left, 0).reduce(function(prev, curr) {
-          var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-          if (currDistance < prev.distance) {
-            return {
-              distance: currDistance,
-              element: curr
-            };
-          }
-          return prev;
-        }, {
-          distance: Infinity
-        });
-        next = next.element;
+    case MODE.auto:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.horizontal:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
+      var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
+      var top = this.$selected.offsetTop;
+
+      next = this.elementsAfter(left, 0).reduce(function (prev, curr) {
+        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+        if (currDistance < prev.distance) {
+          return {
+            distance: currDistance,
+            element: curr
+          };
         }
+        return prev;
+      }, {
+        distance: Infinity
+      });
+      next = next.element;
+      break;
 
+    case MODE.horizontal:
+      if (!this.$selected) {
+        next = this.elements()[0];
+        break;
+      }
+
+      next = this.$selected.nextElementSibling;
+      break;
+
+    case MODE.vertical:
+      break;
+
+    case MODE.grid:
+      if (!this.$selected) {
+        next = this.elements()[0];
+        break;
+      }
+
+      var index = this.elements().indexOf(this.$selected);
+      if (index === 0 || (index + 1) % this.$options.cols !== 0) {
         next = this.$selected.nextElementSibling;
-        break;
+      }
 
-      case MODE.vertical:
-        break;
-
-      case MODE.grid:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var index = this.elements().indexOf(this.$selected);
-        if (index === 0 || (index + 1) % this.$options.cols !== 0) {
-          next = this.$selected.nextElementSibling;
-        }
-
-        break;
+      break;
     }
 
     this.select(next, DIRECTION.right);
@@ -417,59 +467,59 @@
   /**
    * Navigate down to the next element if any.
    */
-  Navigator.prototype.down = function() {
+  Navigator.prototype.down = function () {
     var next = null;
 
     switch (this.$options.mode) {
 
-      case MODE.auto:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
-
-        var left = this.$selected.offsetLeft;
-        var top = this.$selected.offsetTop + this.$selected.offsetHeight;
-
-        next = this.elementsAfter(0, top).reduce(function(prev, curr) {
-          var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-          if (currDistance < prev.distance) {
-            return {
-              distance: currDistance,
-              element: curr
-            };
-          }
-          return prev;
-        }, {
-          distance: Infinity
-        });
-        next = next.element;
+    case MODE.auto:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.horizontal:
-        break;
+      var left = this.$selected.offsetLeft;
+      var top = this.$selected.offsetTop + this.$selected.offsetHeight;
 
-      case MODE.vertical:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
+      next = this.elementsAfter(0, top).reduce(function (prev, curr) {
+        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+        if (currDistance < prev.distance) {
+          return {
+            distance: currDistance,
+            element: curr
+          };
         }
+        return prev;
+      }, {
+        distance: Infinity
+      });
+      next = next.element;
+      break;
 
-        next = this.$selected.nextElementSibling;
+    case MODE.horizontal:
+      break;
+
+    case MODE.vertical:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
 
-      case MODE.grid:
-        if (!this.$selected) {
-          next = this.elements()[0];
-          break;
-        }
+      next = this.$selected.nextElementSibling;
+      break;
 
-        next = this.$selected;
-        for (var i = 0; i < this.$options.cols; i++) {
-          next = next && next.nextElementSibling;
-        }
-
+    case MODE.grid:
+      if (!this.$selected) {
+        next = this.elements()[0];
         break;
+      }
+
+      next = this.$selected;
+      for (var i = 0; i < this.$options.cols; i++) {
+        next = next && next.nextElementSibling;
+      }
+
+      break;
     }
 
     this.select(next, DIRECTION.down);
@@ -480,7 +530,7 @@
    *
    * @return {Element} The selected DOM element.
    */
-  Navigator.prototype.selected = function() {
+  Navigator.prototype.selected = function () {
     return this.$selected;
   };
 
@@ -491,7 +541,7 @@
    *
    * @return void
    */
-  Navigator.prototype.select = function(el, direction) {
+  Navigator.prototype.select = function (el, direction) {
     // Is there an element or is it selected?
     if (!el || el === this.$selected) {
       return; // Nothing to do here.
@@ -516,37 +566,37 @@
    *
    * @return void.
    */
-  Navigator.prototype.scrollTo = function(el, direction) {
+  Navigator.prototype.scrollTo = function (el, direction) {
     el = unboxElement(el);
     if (!this.inContainerViewport(el)) {
       switch (direction) {
-        case DIRECTION.left:
-          this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
-          break;
-        case DIRECTION.up:
-          this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
-          break;
-        case DIRECTION.right:
-          this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
-          break;
-        case DIRECTION.down:
-          this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
-          break;
+      case DIRECTION.left:
+        this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
+        break;
+      case DIRECTION.up:
+        this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
+        break;
+      case DIRECTION.right:
+        this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
+        break;
+      case DIRECTION.down:
+        this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
+        break;
       }
     } else if (!inViewport(el)) {
       switch (direction) {
-        case DIRECTION.left:
-          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft;
-          break;
-        case DIRECTION.up:
-          document.body.scrollTop = el.offsetTop - document.body.offsetTop;
-          break;
-        case DIRECTION.right:
-          document.body.scrollLeft = el.offsetLeft - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
-          break;
-        case DIRECTION.down:
-          document.body.scrollTop = el.offsetTop - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
-          break;
+      case DIRECTION.left:
+        document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft;
+        break;
+      case DIRECTION.up:
+        document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop;
+        break;
+      case DIRECTION.right:
+        document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
+        break;
+      case DIRECTION.down:
+        document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
+        break;
       }
     }
   };
@@ -558,7 +608,7 @@
    *
    * @return {Boolean} true if the given element is in the container viewport, otherwise false.
    */
-  Navigator.prototype.inContainerViewport = function(el) {
+  Navigator.prototype.inContainerViewport = function (el) {
     el = unboxElement(el);
     // Check on left side.
     if (el.offsetLeft - this.$container.scrollLeft < this.$container.offsetLeft) {
@@ -584,7 +634,7 @@
    *
    * @return {Array} An array of elements.
    */
-  Navigator.prototype.elements = function() {
+  Navigator.prototype.elements = function () {
     var children = [];
     for (var i = this.$container.children.length; i--;) {
       // Skip comment nodes on IE8
@@ -603,8 +653,8 @@
    *
    * @return {Array} An array of elements.
    */
-  Navigator.prototype.elementsAfter = function(left, top) {
-    return this.elements().filter(function(el) {
+  Navigator.prototype.elementsAfter = function (left, top) {
+    return this.elements().filter(function (el) {
       return el.offsetLeft >= left && el.offsetTop >= top;
     });
   };
@@ -617,8 +667,8 @@
    *
    * @return {Array} An array of elements.
    */
-  Navigator.prototype.elementsBefore = function(left, top) {
-    return this.elements().filter(function(el) {
+  Navigator.prototype.elementsBefore = function (left, top) {
+    return this.elements().filter(function (el) {
       return el.offsetLeft <= left && el.offsetTop <= top;
     });
   };
@@ -630,7 +680,7 @@
    *
    * @return void.
    */
-  Navigator.prototype.handleKeydown = function(event) {
+  Navigator.prototype.handleKeydown = function (event) {
     if (this.$keys[event.which]) {
       event.preventDefault();
       this.$keys[event.which].call(this);
@@ -651,13 +701,13 @@
 
     var old = $.fn.domNavigator;
 
-    $.fn.domNavigator = function(method) {
+    $.fn.domNavigator = function (method) {
 
       // Parse arguments.
       var args = Array.prototype.slice.call(arguments, 1);
       var retval;
 
-      this.each(function() {
+      this.each(function () {
 
         // Create Navigator instance.
         if (!this.domNavigator) {
@@ -684,7 +734,7 @@
     // jQuery plugin no conflict //
     //---------------------------//
 
-    $.fn.domNavigator.noConflict = function() {
+    $.fn.domNavigator.noConflict = function () {
       $.fn.domNavigator = old;
       return this;
     };

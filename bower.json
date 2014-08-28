@@ -1,7 +1,7 @@
 {
   "name": "dom-navigator",
   "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "dist/dom-navigator.js",
   "license": "MIT",
   "ignore": [
@@ -10,7 +10,8 @@
     "*.jquery.json",
     "test",
     "Gruntfile.js",
-    "package.json"
+    "package.json",
+    "src"
   ],
   "keywords": [
     "dom-navigator",
