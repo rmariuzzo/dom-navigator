@@ -1,0 +1,18 @@
+{
+  "name": "dom-navigator-site",
+  "version": "1.0.2",
+  "homepage": "https://rmariuzzo.github.io/dom-navigator",
+  "authors": [
+    "Rubens Mariuzzo <rubens@mariuzzo.com>"
+  ],
+  "description": "DOM Navigator site.",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
