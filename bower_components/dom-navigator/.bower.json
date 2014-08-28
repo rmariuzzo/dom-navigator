@@ -1,7 +1,7 @@
 {
   "name": "dom-navigator",
   "description": "Library that allow keyboard navigation through DOM elements (←↑→↓).",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/dom-navigator.js",
   "license": "MIT",
   "ignore": [
@@ -10,7 +10,8 @@
     "*.jquery.json",
     "test",
     "Gruntfile.js",
-    "package.json"
+    "package.json",
+    "src"
   ],
   "keywords": [
     "dom-navigator",
@@ -38,14 +39,14 @@
     "qunit": "~1.12.0",
     "jquery": "latest"
   },
-  "_release": "1.0.2",
+  "_release": "1.0.3",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.2",
-    "commit": "d70c9941cb5a30a50cf247ddcebf4d397cbe6acc"
+    "tag": "1.0.3",
+    "commit": "c8a3d7b59c1a3803a721996d080e7213aebcb499"
   },
   "_source": "git://github.com/rmariuzzo/dom-navigator.git",
-  "_target": "~1.0.2",
+  "_target": "~1.0.3",
   "_originalSource": "dom-navigator",
   "_direct": true
 }
