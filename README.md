@@ -1,4 +1,5 @@
 # DOM Navigator
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/rmariuzzo/dom-navigator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > Library that allow keyboard navigation through DOM elements (←↑→↓).
 
