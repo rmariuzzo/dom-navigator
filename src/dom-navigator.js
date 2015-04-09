@@ -164,6 +164,7 @@
     this.$doc = window.document;
     this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
+    this.$events = [];
     this.init();
   };
 
@@ -554,6 +555,15 @@
    * @return void
    */
   Navigator.prototype.select = function (el, direction) {
+    // Tigger event on select
+    if(this.$events['select']) {
+      this.$events['select'](el, direction);
+    }
+
+    // Tigger event on select - jquery
+    if($) {
+      $(this.$container).trigger('domNavigator.select', [el, direction]);
+    }
     // Is there an element or is it selected?
     if (!el || el === this.$selected) {
       return; // Nothing to do here.
@@ -569,6 +579,20 @@
     addClass(el, this.$options.selected);
     this.$selected = el;
   };
+
+  /**
+   * Bind events
+   */
+  Navigator.prototype.on = function (event, callback) {
+    this.$events[event] = callback;
+  };
+
+  /**
+   * Unbind events
+   */
+   Navigator.prototype.off = function (event) {
+     delete this.$events[event];
+   };
 
   /**
    * Scroll the container to an element.
