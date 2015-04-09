@@ -261,6 +261,14 @@
     this.$keydownHandler = function (event) {
       self.handleKeydown.call(self, event);
     };
+    // Tigger event on select
+    if(this.$events['enable']) {
+      this.$events['enable']();
+    }
+    // Tigger event on enable - jquery
+    if($) {
+      $(this.$container).trigger('domNavigator.enable');
+    }
     this.$doc.addEventListener('keydown', this.$keydownHandler);
   };
 
@@ -271,6 +279,14 @@
    */
   Navigator.prototype.disable = function () {
     if (this.$keydownHandler) {
+      // Tigger event on disable
+      if(this.$events['disable']) {
+        this.$events['disable']();
+      }
+      // Tigger event on disable - jquery
+      if($) {
+        $(this.$container).trigger('domNavigator.disable');
+      }
       this.$doc.removeEventListener('keydown', this.$keydownHandler);
     }
   };
@@ -283,6 +299,14 @@
   Navigator.prototype.destroy = function () {
     this.disable();
     if (this.$container.domNavigator) {
+      // Tigger event on disable
+      if(this.$events['destroy']) {
+        this.$events['destroy']();
+      }
+      // Tigger event on disable - jquery
+      if($) {
+        $(this.$container).trigger('domNavigator.destroy');
+      }
       delete this.$container.domNavigator;
     }
   };
@@ -559,10 +583,13 @@
     if(this.$events['select']) {
       this.$events['select'](el, direction);
     }
-
+    if(this.$events[direction]) {
+      this.$events[direction](el);
+    }
     // Tigger event on select - jquery
     if($) {
       $(this.$container).trigger('domNavigator.select', [el, direction]);
+      $(this.$container).trigger('domNavigator.' + direction, [el]);
     }
     // Is there an element or is it selected?
     if (!el || el === this.$selected) {
