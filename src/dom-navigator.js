@@ -157,7 +157,7 @@
    */
   var Navigator = function (container, options) {
 
-    if(typeof container === 'string') {
+    if (typeof container === 'string') {
       container = document.querySelector(container);
     }
 
@@ -262,11 +262,11 @@
       self.handleKeydown.call(self, event);
     };
     // Tigger event on select
-    if(this.$events['enable']) {
+    if (this.$events['enable']) {
       this.$events['enable']();
     }
     // Tigger event on enable - jquery
-    if($) {
+    if ($) {
       $(this.$container).trigger('domNavigator.enable');
     }
     this.$doc.addEventListener('keydown', this.$keydownHandler);
@@ -280,11 +280,11 @@
   Navigator.prototype.disable = function () {
     if (this.$keydownHandler) {
       // Tigger event on disable
-      if(this.$events['disable']) {
+      if (this.$events['disable']) {
         this.$events['disable']();
       }
       // Tigger event on disable - jquery
-      if($) {
+      if ($) {
         $(this.$container).trigger('domNavigator.disable');
       }
       this.$doc.removeEventListener('keydown', this.$keydownHandler);
@@ -300,11 +300,11 @@
     this.disable();
     if (this.$container.domNavigator) {
       // Tigger event on disable
-      if(this.$events['destroy']) {
+      if (this.$events['destroy']) {
         this.$events['destroy']();
       }
       // Tigger event on disable - jquery
-      if($) {
+      if ($) {
         $(this.$container).trigger('domNavigator.destroy');
       }
       delete this.$container.domNavigator;
@@ -580,14 +580,14 @@
    */
   Navigator.prototype.select = function (el, direction) {
     // Tigger event on select
-    if(this.$events['select']) {
+    if (this.$events['select']) {
       this.$events['select'](el, direction);
     }
-    if(this.$events[direction]) {
+    if (this.$events[direction]) {
       this.$events[direction](el);
     }
     // Tigger event on select - jquery
-    if($) {
+    if ($) {
       $(this.$container).trigger('domNavigator.select', [el, direction]);
       $(this.$container).trigger('domNavigator.' + direction, [el]);
     }
