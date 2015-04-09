@@ -148,15 +148,23 @@
   /**
    * Create a new DOM Navigator.
    *
-   * @param container {Element} The container of the element to navigate.
+   * @param container {Element | String} The container of the element to navigate
+   * or the selector name of the container of the element.
+   *
    * @param options {Object} The options to configure the DOM navigator.
    *
    * @return void.
    */
   var Navigator = function (container, options) {
+
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+
     this.$doc = window.document;
     this.$container = container;
     this.$options = extend({}, Navigator.defaults, options);
+    this.$events = [];
     this.init();
   };
 
@@ -253,6 +261,14 @@
     this.$keydownHandler = function (event) {
       self.handleKeydown.call(self, event);
     };
+    // Tigger event on select
+    if (this.$events['enable']) {
+      this.$events['enable']();
+    }
+    // Tigger event on enable - jquery
+    if ($) {
+      $(this.$container).trigger('domNavigator.enable');
+    }
     this.$doc.addEventListener('keydown', this.$keydownHandler);
   };
 
@@ -263,6 +279,14 @@
    */
   Navigator.prototype.disable = function () {
     if (this.$keydownHandler) {
+      // Tigger event on disable
+      if (this.$events['disable']) {
+        this.$events['disable']();
+      }
+      // Tigger event on disable - jquery
+      if ($) {
+        $(this.$container).trigger('domNavigator.disable');
+      }
       this.$doc.removeEventListener('keydown', this.$keydownHandler);
     }
   };
@@ -275,6 +299,14 @@
   Navigator.prototype.destroy = function () {
     this.disable();
     if (this.$container.domNavigator) {
+      // Tigger event on disable
+      if (this.$events['destroy']) {
+        this.$events['destroy']();
+      }
+      // Tigger event on disable - jquery
+      if ($) {
+        $(this.$container).trigger('domNavigator.destroy');
+      }
       delete this.$container.domNavigator;
     }
   };
@@ -547,6 +579,18 @@
    * @return void
    */
   Navigator.prototype.select = function (el, direction) {
+    // Tigger event on select
+    if (this.$events['select']) {
+      this.$events['select'](el, direction);
+    }
+    if (this.$events[direction]) {
+      this.$events[direction](el);
+    }
+    // Tigger event on select - jquery
+    if ($) {
+      $(this.$container).trigger('domNavigator.select', [el, direction]);
+      $(this.$container).trigger('domNavigator.' + direction, [el]);
+    }
     // Is there an element or is it selected?
     if (!el || el === this.$selected) {
       return; // Nothing to do here.
@@ -562,6 +606,20 @@
     addClass(el, this.$options.selected);
     this.$selected = el;
   };
+
+  /**
+   * Bind events
+   */
+  Navigator.prototype.on = function (event, callback) {
+    this.$events[event] = callback;
+  };
+
+  /**
+   * Unbind events
+   */
+   Navigator.prototype.off = function (event) {
+     delete this.$events[event];
+   };
 
   /**
    * Scroll the container to an element.
