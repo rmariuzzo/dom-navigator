@@ -19,7 +19,7 @@
  * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>
  *
  * <%= pkg.homepage %>
- * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> Licensed MIT
+ * Copyright (c) 2014, <%= grunt.template.today("yyyy") %> <%= pkg.author.name %> Licensed MIT
  */
 `,
 
@@ -36,7 +36,7 @@
                     stripBanners: true
                 },
                 dist: {
-                    src: ['src/<%= filename %>.js'],
+                    src: ['dist/<%= filename %>.js'],
                     dest: 'dist/<%= filename %>.js'
                 }
             },
@@ -80,16 +80,16 @@
 
             watch: {
                 gruntfile: {
-                    files: '<%= jshint.gruntfile.src %>',
+                    files: '<%= jshint.gruntfile %>',
                     tasks: ['jshint:gruntfile']
                 },
                 src: {
-                    files: '<%= jshint.src.src %>',
-                    tasks: ['jshint:src', 'qunit']
+                    files: '<%= jshint.src %>',
+                    tasks: ['test']
                 },
                 test: {
-                    files: '<%= jshint.test.src %>',
-                    tasks: ['jshint:test', 'qunit']
+                    files: '<%= jshint.test %>',
+                    tasks: ['test']
                 }
             },
 
@@ -100,7 +100,7 @@
                 },
                 dist: {
                     files: {
-                        'dist/jquery.checkboxes-<%= pkg.version %>.js': 'src/jquery.checkboxes.js'
+                        'dist/<%= filename %>.js': 'src/<%= filename %>.js'
                     }
                 }
             }
@@ -108,10 +108,11 @@
 
         // Default task.
         grunt.registerTask('default', [
+            'clean',
             'jshint',
+            'babel',
             'connect',
             'qunit',
-            'clean',
             'concat',
             'uglify'
         ]);
@@ -122,7 +123,9 @@
         ]);
 
         grunt.registerTask('test', [
+            'clean',
             'jshint',
+            'babel',
             'connect',
             'qunit'
         ]);

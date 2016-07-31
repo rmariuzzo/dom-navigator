@@ -1,10 +1,3 @@
-/*
- * DOM Navigator
- *
- * Copyright (c) 2014-2016 Rubens Mariuzzo
- * Licensed under the MIT license.
- */
-
 (function (factory) {
 
     'use strict';
