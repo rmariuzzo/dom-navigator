@@ -32,6 +32,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * @returns {Object}
      */
 
+    var _this5 = this;
+
     function extend(out) {
         out = out || {};
 
@@ -326,59 +328,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'left',
             value: function left() {
+                var _this = this;
+
                 var next = null;
 
-                switch (this.$options.mode) {
+                (function () {
+                    switch (_this.$options.mode) {
 
-                    case DomNavigator.MODE.auto:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
-                            break;
-                        }
-
-                        var left = this.$selected.offsetLeft - 1;
-                        var top = this.$selected.offsetTop;
-
-                        next = this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
-                            var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-                            if (currDistance < prev.distance) {
-                                return {
-                                    distance: currDistance,
-                                    element: curr
-                                };
+                        case DomNavigator.MODE.auto:
+                            if (!_this.$selected) {
+                                next = _this.elements()[0];
+                                break;
                             }
-                            return prev;
-                        }, {
-                            distance: Infinity
-                        });
-                        next = next.element;
-                        break;
 
-                    case DomNavigator.MODE.horizontal:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            var left = _this.$selected.offsetLeft - 1;
+                            var top = _this.$selected.offsetTop;
+
+                            next = _this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
+                                var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                                if (currDistance < prev.distance) {
+                                    return {
+                                        distance: currDistance,
+                                        element: curr
+                                    };
+                                }
+                                return prev;
+                            }, {
+                                distance: Infinity
+                            });
+                            next = next.element;
                             break;
-                        }
 
-                        next = this.$selected.previousElementSibling;
-                        break;
+                        case DomNavigator.MODE.horizontal:
+                            if (!_this.$selected) {
+                                next = _this.elements()[0];
+                                break;
+                            }
 
-                    case DomNavigator.MODE.vertical:
-                        break;
-
-                    case DomNavigator.MODE.grid:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            next = _this.$selected.previousElementSibling;
                             break;
-                        }
 
-                        var index = this.elements().indexOf(this.$selected);
-                        if (index % this.$options.cols !== 0) {
-                            next = this.$selected.previousElementSibling;
-                        }
+                        case DomNavigator.MODE.vertical:
+                            break;
 
-                        break;
-                }
+                        case DomNavigator.MODE.grid:
+                            if (!_this.$selected) {
+                                next = _this.elements()[0];
+                                break;
+                            }
+
+                            var index = _this.elements().indexOf(_this.$selected);
+                            if (index % _this.$options.cols !== 0) {
+                                next = _this.$selected.previousElementSibling;
+                            }
+
+                            break;
+                    }
+                })();
 
                 this.select(next, DomNavigator.DIRECTION.left);
             }
@@ -392,59 +398,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'up',
             value: function up() {
+                var _this2 = this;
+
                 var next = null;
 
-                switch (this.$options.mode) {
+                (function () {
+                    switch (_this2.$options.mode) {
 
-                    case DomNavigator.MODE.auto:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
-                            break;
-                        }
-
-                        var left = this.$selected.offsetLeft;
-                        var top = this.$selected.offsetTop - 1;
-
-                        next = this.elementsBefore(Infinity, top).reduce(function (prev, curr) {
-                            var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-                            if (currDistance < prev.distance) {
-                                return {
-                                    distance: currDistance,
-                                    element: curr
-                                };
+                        case DomNavigator.MODE.auto:
+                            if (!_this2.$selected) {
+                                next = _this2.elements()[0];
+                                break;
                             }
-                            return prev;
-                        }, {
-                            distance: Infinity
-                        });
-                        next = next.element;
-                        break;
 
-                    case DomNavigator.MODE.horizontal:
-                        break;
+                            var left = _this2.$selected.offsetLeft;
+                            var top = _this2.$selected.offsetTop - 1;
 
-                    case DomNavigator.MODE.vertical:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            next = _this2.elementsBefore(Infinity, top).reduce(function (prev, curr) {
+                                var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                                if (currDistance < prev.distance) {
+                                    return {
+                                        distance: currDistance,
+                                        element: curr
+                                    };
+                                }
+                                return prev;
+                            }, {
+                                distance: Infinity
+                            });
+                            next = next.element;
                             break;
-                        }
 
-                        next = this.$selected.previousElementSibling;
-                        break;
-
-                    case DomNavigator.MODE.grid:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                        case DomNavigator.MODE.horizontal:
                             break;
-                        }
 
-                        next = this.$selected;
-                        for (var i = 0; i < this.$options.cols; i++) {
-                            next = next && next.previousElementSibling;
-                        }
+                        case DomNavigator.MODE.vertical:
+                            if (!_this2.$selected) {
+                                next = _this2.elements()[0];
+                                break;
+                            }
 
-                        break;
-                }
+                            next = _this2.$selected.previousElementSibling;
+                            break;
+
+                        case DomNavigator.MODE.grid:
+                            if (!_this2.$selected) {
+                                next = _this2.elements()[0];
+                                break;
+                            }
+
+                            next = _this2.$selected;
+                            for (var i = 0; i < _this2.$options.cols; i++) {
+                                next = next && next.previousElementSibling;
+                            }
+
+                            break;
+                    }
+                })();
 
                 this.select(next, DomNavigator.DIRECTION.up);
             }
@@ -458,59 +468,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'right',
             value: function right() {
+                var _this3 = this;
+
                 var next = null;
 
-                switch (this.$options.mode) {
+                (function () {
+                    switch (_this3.$options.mode) {
 
-                    case DomNavigator.MODE.auto:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
-                            break;
-                        }
-
-                        var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
-                        var top = this.$selected.offsetTop;
-
-                        next = this.elementsAfter(left, 0).reduce(function (prev, curr) {
-                            var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-                            if (currDistance < prev.distance) {
-                                return {
-                                    distance: currDistance,
-                                    element: curr
-                                };
+                        case DomNavigator.MODE.auto:
+                            if (!_this3.$selected) {
+                                next = _this3.elements()[0];
+                                break;
                             }
-                            return prev;
-                        }, {
-                            distance: Infinity
-                        });
-                        next = next.element;
-                        break;
 
-                    case DomNavigator.MODE.horizontal:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            var left = _this3.$selected.offsetLeft + _this3.$selected.offsetWidth;
+                            var top = _this3.$selected.offsetTop;
+
+                            next = _this3.elementsAfter(left, 0).reduce(function (prev, curr) {
+                                var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                                if (currDistance < prev.distance) {
+                                    return {
+                                        distance: currDistance,
+                                        element: curr
+                                    };
+                                }
+                                return prev;
+                            }, {
+                                distance: Infinity
+                            });
+                            next = next.element;
                             break;
-                        }
 
-                        next = this.$selected.nextElementSibling;
-                        break;
+                        case DomNavigator.MODE.horizontal:
+                            if (!_this3.$selected) {
+                                next = _this3.elements()[0];
+                                break;
+                            }
 
-                    case DomNavigator.MODE.vertical:
-                        break;
-
-                    case DomNavigator.MODE.grid:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            next = _this3.$selected.nextElementSibling;
                             break;
-                        }
 
-                        var index = this.elements().indexOf(this.$selected);
-                        if (index === 0 || (index + 1) % this.$options.cols !== 0) {
-                            next = this.$selected.nextElementSibling;
-                        }
+                        case DomNavigator.MODE.vertical:
+                            break;
 
-                        break;
-                }
+                        case DomNavigator.MODE.grid:
+                            if (!_this3.$selected) {
+                                next = _this3.elements()[0];
+                                break;
+                            }
+
+                            var index = _this3.elements().indexOf(_this3.$selected);
+                            if (index === 0 || (index + 1) % _this3.$options.cols !== 0) {
+                                next = _this3.$selected.nextElementSibling;
+                            }
+
+                            break;
+                    }
+                })();
 
                 this.select(next, DomNavigator.DIRECTION.right);
             }
@@ -522,59 +536,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'down',
             value: function down() {
+                var _this4 = this;
+
                 var next = null;
 
-                switch (this.$options.mode) {
+                (function () {
+                    switch (_this4.$options.mode) {
 
-                    case DomNavigator.MODE.auto:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
-                            break;
-                        }
-
-                        var left = this.$selected.offsetLeft;
-                        var top = this.$selected.offsetTop + this.$selected.offsetHeight;
-
-                        next = this.elementsAfter(0, top).reduce(function (prev, curr) {
-                            var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-                            if (currDistance < prev.distance) {
-                                return {
-                                    distance: currDistance,
-                                    element: curr
-                                };
+                        case DomNavigator.MODE.auto:
+                            if (!_this4.$selected) {
+                                next = _this4.elements()[0];
+                                break;
                             }
-                            return prev;
-                        }, {
-                            distance: Infinity
-                        });
-                        next = next.element;
-                        break;
 
-                    case DomNavigator.MODE.horizontal:
-                        break;
+                            var left = _this4.$selected.offsetLeft;
+                            var top = _this4.$selected.offsetTop + _this4.$selected.offsetHeight;
 
-                    case DomNavigator.MODE.vertical:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                            next = _this4.elementsAfter(0, top).reduce(function (prev, curr) {
+                                var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                                if (currDistance < prev.distance) {
+                                    return {
+                                        distance: currDistance,
+                                        element: curr
+                                    };
+                                }
+                                return prev;
+                            }, {
+                                distance: Infinity
+                            });
+                            next = next.element;
                             break;
-                        }
 
-                        next = this.$selected.nextElementSibling;
-                        break;
-
-                    case DomNavigator.MODE.grid:
-                        if (!this.$selected) {
-                            next = this.elements()[0];
+                        case DomNavigator.MODE.horizontal:
                             break;
-                        }
 
-                        next = this.$selected;
-                        for (var i = 0; i < this.$options.cols; i++) {
-                            next = next && next.nextElementSibling;
-                        }
+                        case DomNavigator.MODE.vertical:
+                            if (!_this4.$selected) {
+                                next = _this4.elements()[0];
+                                break;
+                            }
 
-                        break;
-                }
+                            next = _this4.$selected.nextElementSibling;
+                            break;
+
+                        case DomNavigator.MODE.grid:
+                            if (!_this4.$selected) {
+                                next = _this4.elements()[0];
+                                break;
+                            }
+
+                            next = _this4.$selected;
+                            for (var i = 0; i < _this4.$options.cols; i++) {
+                                next = next && next.nextElementSibling;
+                            }
+
+                            break;
+                    }
+                })();
 
                 this.select(next, DomNavigator.DIRECTION.down);
             }
@@ -780,44 +798,48 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* jQuery plugin definition */
 
     if ($) {
+        (function () {
 
-        var old = $.fn.domNavigator;
+            var old = $.fn.domNavigator;
 
-        $.fn.domNavigator = function (method) {
-
-            // Parse arguments.
-            var args = Array.prototype.slice.call(arguments, 1);
-            var retval;
-
-            this.each(function () {
-
-                // Create DomNavigator instance.
-                if (!this.domNavigator) {
-                    this.domNavigator = new DomNavigator(this, (typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' && method);
+            $.fn.domNavigator = function (method) {
+                for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                    args[_key - 1] = arguments[_key];
                 }
 
-                // Invoke given method with given arguments.
-                if (typeof method === 'string' && this.domNavigator[method]) {
-                    retval = this.domNavigator[method].apply(this.domNavigator, args);
+                // Parse arguments.
+                var retval = void 0;
+
+                this.each(function (i, el) {
+
+                    // Create DomNavigator instance.
+                    if (!el.domNavigator) {
+                        el.domNavigator = new DomNavigator(el, (typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' && method);
+                    }
+
+                    // Invoke given method with given arguments.
+                    if (typeof method === 'string' && el.domNavigator[method]) {
+                        retval = el.domNavigator[method].apply(el.domNavigator, args);
+                    }
+                });
+
+                if (retval === undefined) {
+                    retval = this;
                 }
-            });
 
-            if (retval === undefined) {
-                retval = this;
-            }
+                return retval;
+            };
 
-            return retval;
-        };
+            /* Expose constructor. */
 
-        /* Expose constructor. */
+            $.fn.domNavigator.Constructor = DomNavigator;
 
-        $.fn.domNavigator.Constructor = DomNavigator;
+            /* jQuery plugin no conflict. */
 
-        /* jQuery plugin no conflict. */
-
-        $.fn.domNavigator.noConflict = function () {
-            $.fn.domNavigator = old;
-            return this;
-        };
+            $.fn.domNavigator.noConflict = function () {
+                $.fn.domNavigator = old;
+                return _this5;
+            };
+        })();
     }
 });

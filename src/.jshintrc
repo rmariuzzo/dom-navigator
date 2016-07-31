@@ -14,6 +14,7 @@
     "esversion": 6,
     "predef": [
         "jQuery",
-        "define"
+        "define",
+        "console"
     ]
 }

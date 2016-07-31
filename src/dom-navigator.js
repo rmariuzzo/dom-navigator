@@ -237,8 +237,8 @@
          * @return void.
          */
         validateOptions() {
-            var validMode = false;
-            for (var m in DomNavigator.MODE) {
+            let validMode = false;
+            for (let m in DomNavigator.MODE) {
                 validMode = validMode || this.$options.mode === DomNavigator.MODE[m];
             }
             if (!validMode) {
@@ -252,7 +252,7 @@
          * @return void.
          */
         enable() {
-            var self = this;
+            let self = this;
             this.$keydownHandler = function (event) {
                 self.handleKeydown.call(self, event);
             };
@@ -288,7 +288,7 @@
          * @return void.
          */
         left() {
-            var next = null;
+            let next = null;
 
             switch (this.$options.mode) {
 
@@ -298,11 +298,11 @@
                         break;
                     }
 
-                    var left = this.$selected.offsetLeft - 1;
-                    var top = this.$selected.offsetTop;
+                    let left = this.$selected.offsetLeft - 1;
+                    let top = this.$selected.offsetTop;
 
-                    next = this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
-                        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                    next = this.elementsBefore(left, Infinity).reduce((prev, curr) => {
+                        let currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
                         if (currDistance < prev.distance) {
                             return {
                                 distance: currDistance,
@@ -334,7 +334,7 @@
                         break;
                     }
 
-                    var index = this.elements().indexOf(this.$selected);
+                    let index = this.elements().indexOf(this.$selected);
                     if (index % this.$options.cols !== 0) {
                         next = this.$selected.previousElementSibling;
                     }
@@ -351,7 +351,7 @@
          * @return void.
          */
         up() {
-            var next = null;
+            let next = null;
 
             switch (this.$options.mode) {
 
@@ -361,11 +361,11 @@
                         break;
                     }
 
-                    var left = this.$selected.offsetLeft;
-                    var top = this.$selected.offsetTop - 1;
+                    let left = this.$selected.offsetLeft;
+                    let top = this.$selected.offsetTop - 1;
 
-                    next = this.elementsBefore(Infinity, top).reduce(function (prev, curr) {
-                        var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                    next = this.elementsBefore(Infinity, top).reduce((prev, curr) => {
+                        let currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
                         if (currDistance < prev.distance) {
                             return {
                                 distance: currDistance,
@@ -398,7 +398,7 @@
                     }
 
                     next = this.$selected;
-                    for (var i = 0; i < this.$options.cols; i++) {
+                    for (let i = 0; i < this.$options.cols; i++) {
                         next = next && next.previousElementSibling;
                     }
 
@@ -414,7 +414,7 @@
          * @return void.
          */
         right() {
-            var next = null;
+            let next = null;
 
             switch (this.$options.mode) {
 
@@ -424,11 +424,11 @@
                         break;
                     }
 
-                    var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
-                    var top = this.$selected.offsetTop;
+                    let left = this.$selected.offsetLeft + this.$selected.offsetWidth;
+                    let top = this.$selected.offsetTop;
 
-                    next = this.elementsAfter(left, 0).reduce(function (prev, curr) {
-                        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                    next = this.elementsAfter(left, 0).reduce((prev, curr) => {
+                        let currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
                         if (currDistance < prev.distance) {
                             return {
                                 distance: currDistance,
@@ -460,7 +460,7 @@
                         break;
                     }
 
-                    var index = this.elements().indexOf(this.$selected);
+                    let index = this.elements().indexOf(this.$selected);
                     if (index === 0 || (index + 1) % this.$options.cols !== 0) {
                         next = this.$selected.nextElementSibling;
                     }
@@ -475,7 +475,7 @@
          * Navigate down to the next element if any.
          */
         down() {
-            var next = null;
+            let next = null;
 
             switch (this.$options.mode) {
 
@@ -485,11 +485,11 @@
                         break;
                     }
 
-                    var left = this.$selected.offsetLeft;
-                    var top = this.$selected.offsetTop + this.$selected.offsetHeight;
+                    let left = this.$selected.offsetLeft;
+                    let top = this.$selected.offsetTop + this.$selected.offsetHeight;
 
-                    next = this.elementsAfter(0, top).reduce(function (prev, curr) {
-                        var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                    next = this.elementsAfter(0, top).reduce((prev, curr) => {
+                        let currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
                         if (currDistance < prev.distance) {
                             return {
                                 distance: currDistance,
@@ -522,7 +522,7 @@
                     }
 
                     next = this.$selected;
-                    for (var i = 0; i < this.$options.cols; i++) {
+                    for (let i = 0; i < this.$options.cols; i++) {
                         next = next && next.nextElementSibling;
                     }
 
@@ -646,8 +646,8 @@
          * @return {Array} An array of elements.
          */
         elements() {
-            var children = [];
-            for (var i = this.$container.children.length; i--;) {
+            let children = [];
+            for (let i = this.$container.children.length; i--;) {
                 // Skip comment nodes on IE8
                 if (this.$container.children[i].nodeType !== 8) {
                     children.unshift(this.$container.children[i]);
@@ -665,9 +665,7 @@
          * @return {Array} An array of elements.
          */
         elementsAfter(left, top) {
-            return this.elements().filter(function (el) {
-                return el.offsetLeft >= left && el.offsetTop >= top;
-            });
+            return this.elements().filter(el => el.offsetLeft >= left && el.offsetTop >= top);
         }
 
         /**
@@ -679,9 +677,7 @@
          * @return {Array} An array of elements.
          */
         elementsBefore(left, top) {
-            return this.elements().filter(function (el) {
-                return el.offsetLeft <= left && el.offsetTop <= top;
-            });
+            return this.elements().filter(el => el.offsetLeft <= left && el.offsetTop <= top);
         }
 
         /**
@@ -708,24 +704,23 @@
 
     if ($) {
 
-        var old = $.fn.domNavigator;
+        let old = $.fn.domNavigator;
 
-        $.fn.domNavigator = function (method) {
+        $.fn.domNavigator = function (method, ...args) {
 
             // Parse arguments.
-            var args = Array.prototype.slice.call(arguments, 1);
-            var retval;
+            let retval;
 
-            this.each(function () {
+            this.each((i, el) => {
 
                 // Create DomNavigator instance.
-                if (!this.domNavigator) {
-                    this.domNavigator = new DomNavigator(this, typeof method === 'object' && method);
+                if (!el.domNavigator) {
+                    el.domNavigator = new DomNavigator(el, typeof method === 'object' && method);
                 }
 
                 // Invoke given method with given arguments.
-                if (typeof method === 'string' && this.domNavigator[method]) {
-                    retval = this.domNavigator[method].apply(this.domNavigator, args);
+                if (typeof method === 'string' && el.domNavigator[method]) {
+                    retval = el.domNavigator[method].apply(el.domNavigator, args);
                 }
 
             });
@@ -743,7 +738,7 @@
 
         /* jQuery plugin no conflict. */
 
-        $.fn.domNavigator.noConflict = function () {
+        $.fn.domNavigator.noConflict = () => {
             $.fn.domNavigator = old;
             return this;
         };
