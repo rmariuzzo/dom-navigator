@@ -25,12 +25,12 @@
     function extend(out) {
         out = out || {};
 
-        for (var i = 1; i < arguments.length; i++) {
+        for (let i = 1; i < arguments.length; i++) {
             if (!arguments[i]) {
                 continue;
             }
 
-            for (var key in arguments[i]) {
+            for (let key in arguments[i]) {
                 if (arguments[i].hasOwnProperty(key)) {
                     out[key] = arguments[i][key];
                 }
@@ -90,7 +90,7 @@
      * @return {Boolean} True if the given element is fully visible in the viewport, otherwise false.
      */
     function inViewport(el) {
-        var rect = el.getBoundingClientRect();
+        let rect = el.getBoundingClientRect();
         return (
             rect.top >= 0 &&
             rect.left >= 0 &&
@@ -107,7 +107,7 @@
      * @return {Number} The offset top.
      */
     function absoluteOffsetTop(el) {
-        var offsetTop = 0;
+        let offsetTop = 0;
         do {
             if (!isNaN(el.offsetTop)) {
                 offsetTop += el.offsetTop;
@@ -124,7 +124,7 @@
      * @return {Number} The offset left.
      */
     function absoluteOffsetLeft(el) {
-        var offsetLeft = 0;
+        let offsetLeft = 0;
         do {
             if (!isNaN(el.offsetLeft)) {
                 offsetLeft += el.offsetLeft;
@@ -135,7 +135,7 @@
 
     /* Class definition. */
 
-    class Navigator {
+    class DomNavigator {
 
         /**
          * Directions.
@@ -175,7 +175,7 @@
          */
         static get DEFAULTS() {
             return {
-                mode: Navigator.MODE.auto,
+                mode: DomNavigator.MODE.auto,
                 selected: 'selected',
                 left: 37,
                 up: 38,
@@ -196,7 +196,7 @@
         constructor(container, options) {
             this.$doc = window.document;
             this.$container = container;
-            this.$options = extend({}, Navigator.DEFAULTS, options);
+            this.$options = extend({}, DomNavigator.DEFAULTS, options);
             this.init();
         }
 
@@ -216,7 +216,7 @@
             this.$keys[this.$options.down] = this.down;
 
             // Calculate cols if needed for grid mode.
-            if (this.$options.mode === Navigator.MODE.grid && !this.$options.cols) {
+            if (this.$options.mode === DomNavigator.MODE.grid && !this.$options.cols) {
                 var els = this.elements();
                 var count = [];
                 for (var i = 0; i < els.length; i++) {
@@ -238,8 +238,8 @@
          */
         validateOptions() {
             var validMode = false;
-            for (var m in Navigator.MODE) {
-                validMode = validMode || this.$options.mode === Navigator.MODE[m];
+            for (var m in DomNavigator.MODE) {
+                validMode = validMode || this.$options.mode === DomNavigator.MODE[m];
             }
             if (!validMode) {
                 throw new Error('Unsupported navigation mode: ' + this.$options.mode);
@@ -292,7 +292,7 @@
 
             switch (this.$options.mode) {
 
-                case Navigator.MODE.auto:
+                case DomNavigator.MODE.auto:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -316,7 +316,7 @@
                     next = next.element;
                     break;
 
-                case Navigator.MODE.horizontal:
+                case DomNavigator.MODE.horizontal:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -325,10 +325,10 @@
                     next = this.$selected.previousElementSibling;
                     break;
 
-                case Navigator.MODE.vertical:
+                case DomNavigator.MODE.vertical:
                     break;
 
-                case Navigator.MODE.grid:
+                case DomNavigator.MODE.grid:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -342,7 +342,7 @@
                     break;
             }
 
-            this.select(next, Navigator.DIRECTION.left);
+            this.select(next, DomNavigator.DIRECTION.left);
         }
 
         /**
@@ -355,7 +355,7 @@
 
             switch (this.$options.mode) {
 
-                case Navigator.MODE.auto:
+                case DomNavigator.MODE.auto:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -379,10 +379,10 @@
                     next = next.element;
                     break;
 
-                case Navigator.MODE.horizontal:
+                case DomNavigator.MODE.horizontal:
                     break;
 
-                case Navigator.MODE.vertical:
+                case DomNavigator.MODE.vertical:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -391,7 +391,7 @@
                     next = this.$selected.previousElementSibling;
                     break;
 
-                case Navigator.MODE.grid:
+                case DomNavigator.MODE.grid:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -405,7 +405,7 @@
                     break;
             }
 
-            this.select(next, Navigator.DIRECTION.up);
+            this.select(next, DomNavigator.DIRECTION.up);
         }
 
         /**
@@ -418,7 +418,7 @@
 
             switch (this.$options.mode) {
 
-                case Navigator.MODE.auto:
+                case DomNavigator.MODE.auto:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -442,7 +442,7 @@
                     next = next.element;
                     break;
 
-                case Navigator.MODE.horizontal:
+                case DomNavigator.MODE.horizontal:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -451,10 +451,10 @@
                     next = this.$selected.nextElementSibling;
                     break;
 
-                case Navigator.MODE.vertical:
+                case DomNavigator.MODE.vertical:
                     break;
 
-                case Navigator.MODE.grid:
+                case DomNavigator.MODE.grid:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -468,7 +468,7 @@
                     break;
             }
 
-            this.select(next, Navigator.DIRECTION.right);
+            this.select(next, DomNavigator.DIRECTION.right);
         }
 
         /**
@@ -479,7 +479,7 @@
 
             switch (this.$options.mode) {
 
-                case Navigator.MODE.auto:
+                case DomNavigator.MODE.auto:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -503,10 +503,10 @@
                     next = next.element;
                     break;
 
-                case Navigator.MODE.horizontal:
+                case DomNavigator.MODE.horizontal:
                     break;
 
-                case Navigator.MODE.vertical:
+                case DomNavigator.MODE.vertical:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -515,7 +515,7 @@
                     next = this.$selected.nextElementSibling;
                     break;
 
-                case Navigator.MODE.grid:
+                case DomNavigator.MODE.grid:
                     if (!this.$selected) {
                         next = this.elements()[0];
                         break;
@@ -529,7 +529,7 @@
                     break;
             }
 
-            this.select(next, Navigator.DIRECTION.down);
+            this.select(next, DomNavigator.DIRECTION.down);
         }
 
         /**
@@ -581,31 +581,31 @@
             el = unboxElement(el);
             if (!this.inContainerViewport(el)) {
                 switch (direction) {
-                    case Navigator.DIRECTION.left:
+                    case DomNavigator.DIRECTION.left:
                         this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
                         break;
-                    case Navigator.DIRECTION.up:
+                    case DomNavigator.DIRECTION.up:
                         this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
                         break;
-                    case Navigator.DIRECTION.right:
+                    case DomNavigator.DIRECTION.right:
                         this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
                         break;
-                    case Navigator.DIRECTION.down:
+                    case DomNavigator.DIRECTION.down:
                         this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
                         break;
                 }
             } else if (!inViewport(el)) {
                 switch (direction) {
-                    case Navigator.DIRECTION.left:
+                    case DomNavigator.DIRECTION.left:
                         document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft;
                         break;
-                    case Navigator.DIRECTION.up:
+                    case DomNavigator.DIRECTION.up:
                         document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop;
                         break;
-                    case Navigator.DIRECTION.right:
+                    case DomNavigator.DIRECTION.right:
                         document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
                         break;
-                    case Navigator.DIRECTION.down:
+                    case DomNavigator.DIRECTION.down:
                         document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
                         break;
                 }
@@ -700,9 +700,9 @@
 
     }
 
-    /* Export Navigator class */
+    /* Export DomNavigator class */
 
-    window.DomNavigator = Navigator;
+    window.DomNavigator = DomNavigator;
 
     /* jQuery plugin definition */
 
@@ -718,9 +718,9 @@
 
             this.each(function () {
 
-                // Create Navigator instance.
+                // Create DomNavigator instance.
                 if (!this.domNavigator) {
-                    this.domNavigator = new Navigator(this, typeof method === 'object' && method);
+                    this.domNavigator = new DomNavigator(this, typeof method === 'object' && method);
                 }
 
                 // Invoke given method with given arguments.
@@ -739,7 +739,7 @@
 
         /* Expose constructor. */
 
-        $.fn.domNavigator.Constructor = Navigator;
+        $.fn.domNavigator.Constructor = DomNavigator;
 
         /* jQuery plugin no conflict. */
 

@@ -140,8 +140,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /* Class definition. */
 
-    var Navigator = function () {
-        _createClass(Navigator, null, [{
+    var DomNavigator = function () {
+        _createClass(DomNavigator, null, [{
             key: 'DIRECTION',
 
 
@@ -189,7 +189,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'DEFAULTS',
             get: function get() {
                 return {
-                    mode: Navigator.MODE.auto,
+                    mode: DomNavigator.MODE.auto,
                     selected: 'selected',
                     left: 37,
                     up: 38,
@@ -210,12 +210,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         }]);
 
-        function Navigator(container, options) {
-            _classCallCheck(this, Navigator);
+        function DomNavigator(container, options) {
+            _classCallCheck(this, DomNavigator);
 
             this.$doc = window.document;
             this.$container = container;
-            this.$options = extend({}, Navigator.DEFAULTS, options);
+            this.$options = extend({}, DomNavigator.DEFAULTS, options);
             this.init();
         }
 
@@ -224,7 +224,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          */
 
 
-        _createClass(Navigator, [{
+        _createClass(DomNavigator, [{
             key: 'init',
             value: function init() {
                 this.validateOptions();
@@ -239,7 +239,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.$keys[this.$options.down] = this.down;
 
                 // Calculate cols if needed for grid mode.
-                if (this.$options.mode === Navigator.MODE.grid && !this.$options.cols) {
+                if (this.$options.mode === DomNavigator.MODE.grid && !this.$options.cols) {
                     var els = this.elements();
                     var count = [];
                     for (var i = 0; i < els.length; i++) {
@@ -264,8 +264,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             key: 'validateOptions',
             value: function validateOptions() {
                 var validMode = false;
-                for (var m in Navigator.MODE) {
-                    validMode = validMode || this.$options.mode === Navigator.MODE[m];
+                for (var m in DomNavigator.MODE) {
+                    validMode = validMode || this.$options.mode === DomNavigator.MODE[m];
                 }
                 if (!validMode) {
                     throw new Error('Unsupported navigation mode: ' + this.$options.mode);
@@ -330,7 +330,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 switch (this.$options.mode) {
 
-                    case Navigator.MODE.auto:
+                    case DomNavigator.MODE.auto:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -354,7 +354,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = next.element;
                         break;
 
-                    case Navigator.MODE.horizontal:
+                    case DomNavigator.MODE.horizontal:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -363,10 +363,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = this.$selected.previousElementSibling;
                         break;
 
-                    case Navigator.MODE.vertical:
+                    case DomNavigator.MODE.vertical:
                         break;
 
-                    case Navigator.MODE.grid:
+                    case DomNavigator.MODE.grid:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -380,7 +380,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         break;
                 }
 
-                this.select(next, Navigator.DIRECTION.left);
+                this.select(next, DomNavigator.DIRECTION.left);
             }
 
             /**
@@ -396,7 +396,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 switch (this.$options.mode) {
 
-                    case Navigator.MODE.auto:
+                    case DomNavigator.MODE.auto:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -420,10 +420,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = next.element;
                         break;
 
-                    case Navigator.MODE.horizontal:
+                    case DomNavigator.MODE.horizontal:
                         break;
 
-                    case Navigator.MODE.vertical:
+                    case DomNavigator.MODE.vertical:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -432,7 +432,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = this.$selected.previousElementSibling;
                         break;
 
-                    case Navigator.MODE.grid:
+                    case DomNavigator.MODE.grid:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -446,7 +446,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         break;
                 }
 
-                this.select(next, Navigator.DIRECTION.up);
+                this.select(next, DomNavigator.DIRECTION.up);
             }
 
             /**
@@ -462,7 +462,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 switch (this.$options.mode) {
 
-                    case Navigator.MODE.auto:
+                    case DomNavigator.MODE.auto:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -486,7 +486,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = next.element;
                         break;
 
-                    case Navigator.MODE.horizontal:
+                    case DomNavigator.MODE.horizontal:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -495,10 +495,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = this.$selected.nextElementSibling;
                         break;
 
-                    case Navigator.MODE.vertical:
+                    case DomNavigator.MODE.vertical:
                         break;
 
-                    case Navigator.MODE.grid:
+                    case DomNavigator.MODE.grid:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -512,7 +512,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         break;
                 }
 
-                this.select(next, Navigator.DIRECTION.right);
+                this.select(next, DomNavigator.DIRECTION.right);
             }
 
             /**
@@ -526,7 +526,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 switch (this.$options.mode) {
 
-                    case Navigator.MODE.auto:
+                    case DomNavigator.MODE.auto:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -550,10 +550,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = next.element;
                         break;
 
-                    case Navigator.MODE.horizontal:
+                    case DomNavigator.MODE.horizontal:
                         break;
 
-                    case Navigator.MODE.vertical:
+                    case DomNavigator.MODE.vertical:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -562,7 +562,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         next = this.$selected.nextElementSibling;
                         break;
 
-                    case Navigator.MODE.grid:
+                    case DomNavigator.MODE.grid:
                         if (!this.$selected) {
                             next = this.elements()[0];
                             break;
@@ -576,7 +576,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         break;
                 }
 
-                this.select(next, Navigator.DIRECTION.down);
+                this.select(next, DomNavigator.DIRECTION.down);
             }
 
             /**
@@ -637,31 +637,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 el = unboxElement(el);
                 if (!this.inContainerViewport(el)) {
                     switch (direction) {
-                        case Navigator.DIRECTION.left:
+                        case DomNavigator.DIRECTION.left:
                             this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
                             break;
-                        case Navigator.DIRECTION.up:
+                        case DomNavigator.DIRECTION.up:
                             this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
                             break;
-                        case Navigator.DIRECTION.right:
+                        case DomNavigator.DIRECTION.right:
                             this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
                             break;
-                        case Navigator.DIRECTION.down:
+                        case DomNavigator.DIRECTION.down:
                             this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
                             break;
                     }
                 } else if (!inViewport(el)) {
                     switch (direction) {
-                        case Navigator.DIRECTION.left:
+                        case DomNavigator.DIRECTION.left:
                             document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft;
                             break;
-                        case Navigator.DIRECTION.up:
+                        case DomNavigator.DIRECTION.up:
                             document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop;
                             break;
-                        case Navigator.DIRECTION.right:
+                        case DomNavigator.DIRECTION.right:
                             document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
                             break;
-                        case Navigator.DIRECTION.down:
+                        case DomNavigator.DIRECTION.down:
                             document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
                             break;
                     }
@@ -770,12 +770,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }]);
 
-        return Navigator;
+        return DomNavigator;
     }();
 
-    /* Export Navigator class */
+    /* Export DomNavigator class */
 
-    window.DomNavigator = Navigator;
+    window.DomNavigator = DomNavigator;
 
     /* jQuery plugin definition */
 
@@ -791,9 +791,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             this.each(function () {
 
-                // Create Navigator instance.
+                // Create DomNavigator instance.
                 if (!this.domNavigator) {
-                    this.domNavigator = new Navigator(this, (typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' && method);
+                    this.domNavigator = new DomNavigator(this, (typeof method === 'undefined' ? 'undefined' : _typeof(method)) === 'object' && method);
                 }
 
                 // Invoke given method with given arguments.
@@ -811,7 +811,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         /* Expose constructor. */
 
-        $.fn.domNavigator.Constructor = Navigator;
+        $.fn.domNavigator.Constructor = DomNavigator;
 
         /* jQuery plugin no conflict. */
 
