@@ -217,9 +217,9 @@
 
             // Calculate cols if needed for grid mode.
             if (this.$options.mode === DomNavigator.MODE.grid && !this.$options.cols) {
-                var els = this.elements();
-                var count = [];
-                for (var i = 0; i < els.length; i++) {
+                let els = this.elements();
+                let count = [];
+                for (let i = 0; i < els.length; i++) {
                     if (i > 0 && count[i - 1] !== els[i].offsetTop) {
                         break;
                     }

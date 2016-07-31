@@ -1,3 +1,9 @@
+/*!
+ * dom-navigator - v1.0.3 - 2016-07-31
+ *
+ * https://github.com/rmariuzzo/dom-navigator
+ * Copyright (c) 2014, 2016 Rubens Mariuzzo Licensed MIT
+ */
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
