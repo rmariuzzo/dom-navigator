@@ -1,12 +1,10 @@
-/*!
- * dom-navigator - v1.0.3 - 2016-07-31
- *
- * https://github.com/rmariuzzo/dom-navigator
- * Copyright (c) 2014, 2016 Rubens Mariuzzo Licensed MIT
- */
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function (factory) {
 
@@ -25,9 +23,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     'use strict';
 
-    //-------------------//
-    // Utilities methods //
-    //-------------------//
+    /* Utilities methods. */
+
+    /**
+     * Extend one or more object properties.
+     *
+     * @param {Object} out
+     * @returns {Object}
+     */
 
     function extend(out) {
         out = out || {};
@@ -48,10 +51,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 
     /**
-     * Add a class from an element.
+     * Add a class name to an element.
      *
-     * @param el {Element} The element.
-     * @param className {String} The class.
+     * @param {Element} el The element.
+     * @param {string} className The class.
      */
     function addClass(el, className) {
         if (el.classList) {
@@ -64,8 +67,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     /**
      * Remove a class from an element.
      *
-     * @param el {Element} The element.
-     * @param className {String} The class.
+     * @param {Element} el The element.
+     * @param {string} className The class.
      */
     function removeClass(el, className) {
         if (el.classList) {
@@ -76,9 +79,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 
     /**
-     * Unbox an object from jQuery or array.
+     * Unbox an object from jQuery or an array.
      *
-     * @param obj {Object} The object to unbox.
+     * @param {jQuery|Array|Element} obj The object to unbox.
      *
      * @return {Element} An element.
      */
@@ -92,7 +95,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     /**
      * Indicates if a given element is fully visible in the viewport.
      *
-     * @param el {Element} The element to check.
+     * @param {Element} el The element to check.
      *
      * @return {Boolean} True if the given element is fully visible in the viewport, otherwise false.
      */
@@ -135,565 +138,646 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return offsetLeft;
     }
 
-    //-------------//
-    // Constructor //
-    //-------------//
+    /* Class definition. */
 
-    /**
-     * Create a new DOM Navigator.
-     *
-     * @param container {Element} The container of the element to navigate.
-     * @param options {Object} The options to configure the DOM navigator.
-     *
-     * @return void.
-     */
-    var Navigator = function Navigator(container, options) {
-        this.$doc = window.document;
-        this.$container = container;
-        this.$options = extend({}, Navigator.defaults, options);
-        this.init();
-    };
+    var Navigator = function () {
+        _createClass(Navigator, null, [{
+            key: 'DIRECTION',
 
-    /**
-     * Direction constants.
-     */
-    var DIRECTION = {
-        left: 'left',
-        up: 'up',
-        right: 'right',
-        down: 'down'
-    };
 
-    /**
-     * Navigation mode constants.
-     */
-    var MODE = {
-        auto: 'auto',
-        horizontal: 'horizontal',
-        vertical: 'vertical',
-        grid: 'grid'
-    };
-
-    /**
-     * Defaults options.
-     */
-    Navigator.defaults = {
-        mode: MODE.auto,
-        selected: 'selected',
-        left: 37,
-        up: 38,
-        right: 39,
-        down: 40,
-        cols: 0
-    };
-
-    //---------//
-    // Methods //
-    //---------//
-
-    /**
-     * Initialize the navigator.
-     */
-    Navigator.prototype.init = function () {
-        this.validateOptions();
-        this.$selected = null;
-        this.$keydownHandler = null;
-
-        // Create hotkeys map.
-        this.$keys = {};
-        this.$keys[this.$options.left] = this.left;
-        this.$keys[this.$options.up] = this.up;
-        this.$keys[this.$options.right] = this.right;
-        this.$keys[this.$options.down] = this.down;
-
-        // Calculate cols if needed for grid mode.
-        if (this.$options.mode === MODE.grid && !this.$options.cols) {
-            var els = this.elements();
-            var count = [];
-            for (var i = 0; i < els.length; i++) {
-                if (i > 0 && count[i - 1] !== els[i].offsetTop) {
-                    break;
-                }
-                count[i] = els[i].offsetTop;
+            /**
+             * Directions.
+             *
+             * @returns {{left: string, up: string, right: string, down: string}}
+             * @constructor
+             */
+            get: function get() {
+                return {
+                    left: 'left',
+                    up: 'up',
+                    right: 'right',
+                    down: 'down'
+                };
             }
-            this.$options.cols = count.length;
-        }
 
-        this.enable();
-    };
+            /**
+             * Navigation modes.
+             *
+             * @returns {{auto: string, horizontal: string, vertical: string, grid: string}}
+             * @constructor
+             */
 
-    /**
-     * Validate current options.
-     *
-     * @return void.
-     */
-    Navigator.prototype.validateOptions = function () {
-        var validMode = false;
-        for (var m in MODE) {
-            validMode = validMode || this.$options.mode === MODE[m];
-        }
-        if (!validMode) {
-            throw new Error('Unsupported navigation mode: ' + this.$options.mode);
-        }
-    };
-
-    /**
-     * Enable this navigator.
-     *
-     * @return void.
-     */
-    Navigator.prototype.enable = function () {
-        var self = this;
-        this.$keydownHandler = function (event) {
-            self.handleKeydown.call(self, event);
-        };
-        this.$doc.addEventListener('keydown', this.$keydownHandler);
-    };
-
-    /**
-     * Disable this navigator.
-     *
-     * @return void.
-     */
-    Navigator.prototype.disable = function () {
-        if (this.$keydownHandler) {
-            this.$doc.removeEventListener('keydown', this.$keydownHandler);
-        }
-    };
-
-    /**
-     * Destroy this navigator removing any event registered and any other data.
-     *
-     * @return void.
-     */
-    Navigator.prototype.destroy = function () {
-        this.disable();
-        if (this.$container.domNavigator) {
-            delete this.$container.domNavigator;
-        }
-    };
-
-    /**
-     * Navigate left to the next element if any.
-     *
-     * @return void.
-     */
-    Navigator.prototype.left = function () {
-        var next = null;
-
-        switch (this.$options.mode) {
-
-            case MODE.auto:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var left = this.$selected.offsetLeft - 1;
-                var top = this.$selected.offsetTop;
-
-                next = this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
-                    var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-                    if (currDistance < prev.distance) {
-                        return {
-                            distance: currDistance,
-                            element: curr
-                        };
-                    }
-                    return prev;
-                }, {
-                    distance: Infinity
-                });
-                next = next.element;
-                break;
-
-            case MODE.horizontal:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected.previousElementSibling;
-                break;
-
-            case MODE.vertical:
-                break;
-
-            case MODE.grid:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var index = this.elements().indexOf(this.$selected);
-                if (index % this.$options.cols !== 0) {
-                    next = this.$selected.previousElementSibling;
-                }
-
-                break;
-        }
-
-        this.select(next, DIRECTION.left);
-    };
-
-    /**
-     * Navigate up to the next element if any.
-     *
-     * @return void.
-     */
-    Navigator.prototype.up = function () {
-        var next = null;
-
-        switch (this.$options.mode) {
-
-            case MODE.auto:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var left = this.$selected.offsetLeft;
-                var top = this.$selected.offsetTop - 1;
-
-                next = this.elementsBefore(Infinity, top).reduce(function (prev, curr) {
-                    var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
-                    if (currDistance < prev.distance) {
-                        return {
-                            distance: currDistance,
-                            element: curr
-                        };
-                    }
-                    return prev;
-                }, {
-                    distance: Infinity
-                });
-                next = next.element;
-                break;
-
-            case MODE.horizontal:
-                break;
-
-            case MODE.vertical:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected.previousElementSibling;
-                break;
-
-            case MODE.grid:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected;
-                for (var i = 0; i < this.$options.cols; i++) {
-                    next = next && next.previousElementSibling;
-                }
-
-                break;
-        }
-
-        this.select(next, DIRECTION.up);
-    };
-
-    /**
-     * Navigate right to the next element if any.
-     *
-     * @return void.
-     */
-    Navigator.prototype.right = function () {
-        var next = null;
-
-        switch (this.$options.mode) {
-
-            case MODE.auto:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
-                var top = this.$selected.offsetTop;
-
-                next = this.elementsAfter(left, 0).reduce(function (prev, curr) {
-                    var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-                    if (currDistance < prev.distance) {
-                        return {
-                            distance: currDistance,
-                            element: curr
-                        };
-                    }
-                    return prev;
-                }, {
-                    distance: Infinity
-                });
-                next = next.element;
-                break;
-
-            case MODE.horizontal:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected.nextElementSibling;
-                break;
-
-            case MODE.vertical:
-                break;
-
-            case MODE.grid:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var index = this.elements().indexOf(this.$selected);
-                if (index === 0 || (index + 1) % this.$options.cols !== 0) {
-                    next = this.$selected.nextElementSibling;
-                }
-
-                break;
-        }
-
-        this.select(next, DIRECTION.right);
-    };
-
-    /**
-     * Navigate down to the next element if any.
-     */
-    Navigator.prototype.down = function () {
-        var next = null;
-
-        switch (this.$options.mode) {
-
-            case MODE.auto:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                var left = this.$selected.offsetLeft;
-                var top = this.$selected.offsetTop + this.$selected.offsetHeight;
-
-                next = this.elementsAfter(0, top).reduce(function (prev, curr) {
-                    var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
-                    if (currDistance < prev.distance) {
-                        return {
-                            distance: currDistance,
-                            element: curr
-                        };
-                    }
-                    return prev;
-                }, {
-                    distance: Infinity
-                });
-                next = next.element;
-                break;
-
-            case MODE.horizontal:
-                break;
-
-            case MODE.vertical:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected.nextElementSibling;
-                break;
-
-            case MODE.grid:
-                if (!this.$selected) {
-                    next = this.elements()[0];
-                    break;
-                }
-
-                next = this.$selected;
-                for (var i = 0; i < this.$options.cols; i++) {
-                    next = next && next.nextElementSibling;
-                }
-
-                break;
-        }
-
-        this.select(next, DIRECTION.down);
-    };
-
-    /**
-     * Return the selected DOM element.
-     *
-     * @return {Element} The selected DOM element.
-     */
-    Navigator.prototype.selected = function () {
-        return this.$selected;
-    };
-
-    /**
-     * Select the given element.
-     *
-     * @param el {Element} The DOM element to select.
-     *
-     * @return void
-     */
-    Navigator.prototype.select = function (el, direction) {
-        // Is there an element or is it selected?
-        if (!el || el === this.$selected) {
-            return; // Nothing to do here.
-        }
-        el = unboxElement(el);
-        // Unselect previous element.
-        if (this.$selected) {
-            removeClass(this.$selected, this.$options.selected);
-        }
-        // Scroll to given element.
-        this.scrollTo(el, direction);
-        // Select given element.
-        addClass(el, this.$options.selected);
-        this.$selected = el;
-    };
-
-    /**
-     * Scroll the container to an element.
-     *
-     * @param el {Element} The destination element.
-     * @param direction {String} The direction of the current navigation.
-     *
-     * @return void.
-     */
-    Navigator.prototype.scrollTo = function (el, direction) {
-        el = unboxElement(el);
-        if (!this.inContainerViewport(el)) {
-            switch (direction) {
-                case DIRECTION.left:
-                    this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
-                    break;
-                case DIRECTION.up:
-                    this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
-                    break;
-                case DIRECTION.right:
-                    this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
-                    break;
-                case DIRECTION.down:
-                    this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
-                    break;
+        }, {
+            key: 'MODE',
+            get: function get() {
+                return {
+                    auto: 'auto',
+                    horizontal: 'horizontal',
+                    vertical: 'vertical',
+                    grid: 'grid'
+                };
             }
-        } else if (!inViewport(el)) {
-            switch (direction) {
-                case DIRECTION.left:
-                    document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft;
-                    break;
-                case DIRECTION.up:
-                    document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop;
-                    break;
-                case DIRECTION.right:
-                    document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
-                    break;
-                case DIRECTION.down:
-                    document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
-                    break;
+
+            /**
+             * Default options.
+             *
+             * @returns {{mode: string, selected: string, left: number, up: number, right: number, down: number, cols: number}}
+             * @constructor
+             */
+
+        }, {
+            key: 'DEFAULTS',
+            get: function get() {
+                return {
+                    mode: Navigator.MODE.auto,
+                    selected: 'selected',
+                    left: 37,
+                    up: 38,
+                    right: 39,
+                    down: 40,
+                    cols: 0
+                };
             }
-        }
-    };
 
-    /**
-     * Indicate if an element is in the container viewport.
-     *
-     * @param el {Element} The element to check.
-     *
-     * @return {Boolean} true if the given element is in the container viewport, otherwise false.
-     */
-    Navigator.prototype.inContainerViewport = function (el) {
-        el = unboxElement(el);
-        // Check on left side.
-        if (el.offsetLeft - this.$container.scrollLeft < this.$container.offsetLeft) {
-            return false;
-        }
-        // Check on top side.
-        if (el.offsetTop - this.$container.scrollTop < this.$container.offsetTop) {
-            return false;
-        }
-        // Check on right side.
-        if (el.offsetLeft + el.offsetWidth - this.$container.scrollLeft > this.$container.offsetLeft + this.$container.offsetWidth) {
-            return false;
-        }
-        // Check on down side.
-        if (el.offsetTop + el.offsetHeight - this.$container.scrollTop > this.$container.offsetTop + this.$container.offsetHeight) {
-            return false;
-        }
-        return true;
-    };
+            /**
+             * Create a new DOM Navigator.
+             *
+             * @param container {Element} The container of the element to navigate.
+             * @param options {Object} The options to configure the DOM navigator.
+             *
+             * @return void.
+             */
 
-    /**
-     * Return an array of the navigable elements.
-     *
-     * @return {Array} An array of elements.
-     */
-    Navigator.prototype.elements = function () {
-        var children = [];
-        for (var i = this.$container.children.length; i--;) {
-            // Skip comment nodes on IE8
-            if (this.$container.children[i].nodeType !== 8) {
-                children.unshift(this.$container.children[i]);
+        }]);
+
+        function Navigator(container, options) {
+            _classCallCheck(this, Navigator);
+
+            this.$doc = window.document;
+            this.$container = container;
+            this.$options = extend({}, Navigator.DEFAULTS, options);
+            this.init();
+        }
+
+        /**
+         * Initialize the navigator.
+         */
+
+
+        _createClass(Navigator, [{
+            key: 'init',
+            value: function init() {
+                this.validateOptions();
+                this.$selected = null;
+                this.$keydownHandler = null;
+
+                // Create hotkeys map.
+                this.$keys = {};
+                this.$keys[this.$options.left] = this.left;
+                this.$keys[this.$options.up] = this.up;
+                this.$keys[this.$options.right] = this.right;
+                this.$keys[this.$options.down] = this.down;
+
+                // Calculate cols if needed for grid mode.
+                if (this.$options.mode === Navigator.MODE.grid && !this.$options.cols) {
+                    var els = this.elements();
+                    var count = [];
+                    for (var i = 0; i < els.length; i++) {
+                        if (i > 0 && count[i - 1] !== els[i].offsetTop) {
+                            break;
+                        }
+                        count[i] = els[i].offsetTop;
+                    }
+                    this.$options.cols = count.length;
+                }
+
+                this.enable();
             }
-        }
-        return children;
-    };
 
-    /**
-     * Return an array of navigable elements after an offset.
-     *
-     * @param left {Integer} The left offset.
-     * @param top {Integer} The top offset.
-     *
-     * @return {Array} An array of elements.
-     */
-    Navigator.prototype.elementsAfter = function (left, top) {
-        return this.elements().filter(function (el) {
-            return el.offsetLeft >= left && el.offsetTop >= top;
-        });
-    };
+            /**
+             * Validate current options.
+             *
+             * @return void.
+             */
 
-    /**
-     * Return an array of navigable elements before an offset.
-     *
-     * @param left {Integer} The left offset.
-     * @param top {Integer} The top offset.
-     *
-     * @return {Array} An array of elements.
-     */
-    Navigator.prototype.elementsBefore = function (left, top) {
-        return this.elements().filter(function (el) {
-            return el.offsetLeft <= left && el.offsetTop <= top;
-        });
-    };
+        }, {
+            key: 'validateOptions',
+            value: function validateOptions() {
+                var validMode = false;
+                for (var m in Navigator.MODE) {
+                    validMode = validMode || this.$options.mode === Navigator.MODE[m];
+                }
+                if (!validMode) {
+                    throw new Error('Unsupported navigation mode: ' + this.$options.mode);
+                }
+            }
 
-    /**
-     * Handle the keydown event.
-     *
-     * @param {Event} The event object.
-     *
-     * @return void.
-     */
-    Navigator.prototype.handleKeydown = function (event) {
-        if (this.$keys[event.which]) {
-            event.preventDefault();
-            this.$keys[event.which].call(this);
-        }
-    };
+            /**
+             * Enable this navigator.
+             *
+             * @return void.
+             */
 
-    //------------------------//
-    // Export Navigator class //
-    //------------------------//
+        }, {
+            key: 'enable',
+            value: function enable() {
+                var self = this;
+                this.$keydownHandler = function (event) {
+                    self.handleKeydown.call(self, event);
+                };
+                this.$doc.addEventListener('keydown', this.$keydownHandler);
+            }
+
+            /**
+             * Disable this navigator.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'disable',
+            value: function disable() {
+                if (this.$keydownHandler) {
+                    this.$doc.removeEventListener('keydown', this.$keydownHandler);
+                }
+            }
+
+            /**
+             * Destroy this navigator removing any event registered and any other data.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'destroy',
+            value: function destroy() {
+                this.disable();
+                if (this.$container.domNavigator) {
+                    delete this.$container.domNavigator;
+                }
+            }
+
+            /**
+             * Navigate left to the next element if any.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'left',
+            value: function left() {
+                var next = null;
+
+                switch (this.$options.mode) {
+
+                    case Navigator.MODE.auto:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var left = this.$selected.offsetLeft - 1;
+                        var top = this.$selected.offsetTop;
+
+                        next = this.elementsBefore(left, Infinity).reduce(function (prev, curr) {
+                            var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                            if (currDistance < prev.distance) {
+                                return {
+                                    distance: currDistance,
+                                    element: curr
+                                };
+                            }
+                            return prev;
+                        }, {
+                            distance: Infinity
+                        });
+                        next = next.element;
+                        break;
+
+                    case Navigator.MODE.horizontal:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected.previousElementSibling;
+                        break;
+
+                    case Navigator.MODE.vertical:
+                        break;
+
+                    case Navigator.MODE.grid:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var index = this.elements().indexOf(this.$selected);
+                        if (index % this.$options.cols !== 0) {
+                            next = this.$selected.previousElementSibling;
+                        }
+
+                        break;
+                }
+
+                this.select(next, Navigator.DIRECTION.left);
+            }
+
+            /**
+             * Navigate up to the next element if any.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'up',
+            value: function up() {
+                var next = null;
+
+                switch (this.$options.mode) {
+
+                    case Navigator.MODE.auto:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var left = this.$selected.offsetLeft;
+                        var top = this.$selected.offsetTop - 1;
+
+                        next = this.elementsBefore(Infinity, top).reduce(function (prev, curr) {
+                            var currDistance = Math.abs(left - curr.offsetLeft) + Math.abs(top - curr.offsetTop);
+                            if (currDistance < prev.distance) {
+                                return {
+                                    distance: currDistance,
+                                    element: curr
+                                };
+                            }
+                            return prev;
+                        }, {
+                            distance: Infinity
+                        });
+                        next = next.element;
+                        break;
+
+                    case Navigator.MODE.horizontal:
+                        break;
+
+                    case Navigator.MODE.vertical:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected.previousElementSibling;
+                        break;
+
+                    case Navigator.MODE.grid:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected;
+                        for (var i = 0; i < this.$options.cols; i++) {
+                            next = next && next.previousElementSibling;
+                        }
+
+                        break;
+                }
+
+                this.select(next, Navigator.DIRECTION.up);
+            }
+
+            /**
+             * Navigate right to the next element if any.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'right',
+            value: function right() {
+                var next = null;
+
+                switch (this.$options.mode) {
+
+                    case Navigator.MODE.auto:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var left = this.$selected.offsetLeft + this.$selected.offsetWidth;
+                        var top = this.$selected.offsetTop;
+
+                        next = this.elementsAfter(left, 0).reduce(function (prev, curr) {
+                            var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                            if (currDistance < prev.distance) {
+                                return {
+                                    distance: currDistance,
+                                    element: curr
+                                };
+                            }
+                            return prev;
+                        }, {
+                            distance: Infinity
+                        });
+                        next = next.element;
+                        break;
+
+                    case Navigator.MODE.horizontal:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected.nextElementSibling;
+                        break;
+
+                    case Navigator.MODE.vertical:
+                        break;
+
+                    case Navigator.MODE.grid:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var index = this.elements().indexOf(this.$selected);
+                        if (index === 0 || (index + 1) % this.$options.cols !== 0) {
+                            next = this.$selected.nextElementSibling;
+                        }
+
+                        break;
+                }
+
+                this.select(next, Navigator.DIRECTION.right);
+            }
+
+            /**
+             * Navigate down to the next element if any.
+             */
+
+        }, {
+            key: 'down',
+            value: function down() {
+                var next = null;
+
+                switch (this.$options.mode) {
+
+                    case Navigator.MODE.auto:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        var left = this.$selected.offsetLeft;
+                        var top = this.$selected.offsetTop + this.$selected.offsetHeight;
+
+                        next = this.elementsAfter(0, top).reduce(function (prev, curr) {
+                            var currDistance = Math.abs(curr.offsetLeft - left) + Math.abs(curr.offsetTop - top);
+                            if (currDistance < prev.distance) {
+                                return {
+                                    distance: currDistance,
+                                    element: curr
+                                };
+                            }
+                            return prev;
+                        }, {
+                            distance: Infinity
+                        });
+                        next = next.element;
+                        break;
+
+                    case Navigator.MODE.horizontal:
+                        break;
+
+                    case Navigator.MODE.vertical:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected.nextElementSibling;
+                        break;
+
+                    case Navigator.MODE.grid:
+                        if (!this.$selected) {
+                            next = this.elements()[0];
+                            break;
+                        }
+
+                        next = this.$selected;
+                        for (var i = 0; i < this.$options.cols; i++) {
+                            next = next && next.nextElementSibling;
+                        }
+
+                        break;
+                }
+
+                this.select(next, Navigator.DIRECTION.down);
+            }
+
+            /**
+             * Return the selected DOM element.
+             *
+             * @return {Element} The selected DOM element.
+             */
+
+        }, {
+            key: 'selected',
+            value: function selected() {
+                return this.$selected;
+            }
+
+            /**
+             * Select the given element.
+             *
+             * @param {Element} el The DOM element to select.
+             * @param {string} direction The direction.
+             * @return void
+             */
+
+        }, {
+            key: 'select',
+            value: function select(el, direction) {
+
+                // Is there an element or is it selected?
+                if (!el || el === this.$selected) {
+                    return; // Nothing to do here.
+                }
+                el = unboxElement(el);
+
+                // Unselect previous element.
+                if (this.$selected) {
+                    removeClass(this.$selected, this.$options.selected);
+                }
+
+                // Scroll to given element.
+                this.scrollTo(el, direction);
+
+                // Select given element.
+                addClass(el, this.$options.selected);
+                this.$selected = el;
+            }
+
+            /**
+             * Scroll the container to an element.
+             *
+             * @param el {Element} The destination element.
+             * @param direction {String} The direction of the current navigation.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'scrollTo',
+            value: function scrollTo(el, direction) {
+                el = unboxElement(el);
+                if (!this.inContainerViewport(el)) {
+                    switch (direction) {
+                        case Navigator.DIRECTION.left:
+                            this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft;
+                            break;
+                        case Navigator.DIRECTION.up:
+                            this.$container.scrollTop = el.offsetTop - this.$container.offsetTop;
+                            break;
+                        case Navigator.DIRECTION.right:
+                            this.$container.scrollLeft = el.offsetLeft - this.$container.offsetLeft - (this.$container.offsetWidth - el.offsetWidth);
+                            break;
+                        case Navigator.DIRECTION.down:
+                            this.$container.scrollTop = el.offsetTop - this.$container.offsetTop - (this.$container.offsetHeight - el.offsetHeight);
+                            break;
+                    }
+                } else if (!inViewport(el)) {
+                    switch (direction) {
+                        case Navigator.DIRECTION.left:
+                            document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft;
+                            break;
+                        case Navigator.DIRECTION.up:
+                            document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop;
+                            break;
+                        case Navigator.DIRECTION.right:
+                            document.body.scrollLeft = absoluteOffsetLeft(el) - document.body.offsetLeft - (document.documentElement.clientWidth - el.offsetWidth);
+                            break;
+                        case Navigator.DIRECTION.down:
+                            document.body.scrollTop = absoluteOffsetTop(el) - document.body.offsetTop - (document.documentElement.clientHeight - el.offsetHeight);
+                            break;
+                    }
+                }
+            }
+
+            /**
+             * Indicate if an element is in the container viewport.
+             *
+             * @param el {Element} The element to check.
+             *
+             * @return {Boolean} true if the given element is in the container viewport, otherwise false.
+             */
+
+        }, {
+            key: 'inContainerViewport',
+            value: function inContainerViewport(el) {
+                el = unboxElement(el);
+                // Check on left side.
+                if (el.offsetLeft - this.$container.scrollLeft < this.$container.offsetLeft) {
+                    return false;
+                }
+                // Check on top side.
+                if (el.offsetTop - this.$container.scrollTop < this.$container.offsetTop) {
+                    return false;
+                }
+                // Check on right side.
+                if (el.offsetLeft + el.offsetWidth - this.$container.scrollLeft > this.$container.offsetLeft + this.$container.offsetWidth) {
+                    return false;
+                }
+                // Check on down side.
+                if (el.offsetTop + el.offsetHeight - this.$container.scrollTop > this.$container.offsetTop + this.$container.offsetHeight) {
+                    return false;
+                }
+                return true;
+            }
+
+            /**
+             * Return an array of the navigable elements.
+             *
+             * @return {Array} An array of elements.
+             */
+
+        }, {
+            key: 'elements',
+            value: function elements() {
+                var children = [];
+                for (var i = this.$container.children.length; i--;) {
+                    // Skip comment nodes on IE8
+                    if (this.$container.children[i].nodeType !== 8) {
+                        children.unshift(this.$container.children[i]);
+                    }
+                }
+                return children;
+            }
+
+            /**
+             * Return an array of navigable elements after an offset.
+             *
+             * @param {number} left The left offset.
+             * @param {number} top The top offset.
+             *
+             * @return {Array} An array of elements.
+             */
+
+        }, {
+            key: 'elementsAfter',
+            value: function elementsAfter(left, top) {
+                return this.elements().filter(function (el) {
+                    return el.offsetLeft >= left && el.offsetTop >= top;
+                });
+            }
+
+            /**
+             * Return an array of navigable elements before an offset.
+             *
+             * @param {number} left The left offset.
+             * @param {number} top The top offset.
+             *
+             * @return {Array} An array of elements.
+             */
+
+        }, {
+            key: 'elementsBefore',
+            value: function elementsBefore(left, top) {
+                return this.elements().filter(function (el) {
+                    return el.offsetLeft <= left && el.offsetTop <= top;
+                });
+            }
+
+            /**
+             * Handle the key down event.
+             *
+             * @param {Event} event The event object.
+             *
+             * @return void.
+             */
+
+        }, {
+            key: 'handleKeydown',
+            value: function handleKeydown(event) {
+                if (this.$keys[event.which]) {
+                    event.preventDefault();
+                    this.$keys[event.which].call(this);
+                }
+            }
+        }]);
+
+        return Navigator;
+    }();
+
+    /* Export Navigator class */
 
     window.DomNavigator = Navigator;
 
-    //--------------------------//
-    // jQuery plugin definition //
-    //--------------------------//
+    /* jQuery plugin definition */
 
     if ($) {
 
@@ -725,11 +809,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return retval;
         };
 
+        /* Expose constructor. */
+
         $.fn.domNavigator.Constructor = Navigator;
 
-        //---------------------------//
-        // jQuery plugin no conflict //
-        //---------------------------//
+        /* jQuery plugin no conflict. */
 
         $.fn.domNavigator.noConflict = function () {
             $.fn.domNavigator = old;

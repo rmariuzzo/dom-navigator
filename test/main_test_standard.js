@@ -3,7 +3,7 @@ QUnit.start();
 var lifecycle = {
     beforeEach: function () {
         this.target = $(document.querySelector('#qunit-fixture ul'));
-        this.domNavigator = new DomNavigator(this.target[0]);
+        this.domNavigator = new window.DomNavigator(this.target[0]);
     },
     afterEach: function () {
         this.domNavigator.destroy();
@@ -20,7 +20,7 @@ function simulateKeyDown(element, which) {
     var event;
 
     if (document.createEvent) {
-        event = document.createEvent("HTMLEvents");
+        event = document.createEvent('HTMLEvents');
         event.initEvent('keydown', true, true);
     } else {
         event = document.createEventObject();
@@ -50,7 +50,7 @@ QUnit.test('exists', function (assert) {
 });
 
 QUnit.test('select given element', function (assert) {
-    var selected = '.' + DomNavigator.defaults.selected;
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
     var domNavigator = this.domNavigator;
 
     this.target.children().each(function (i, el) {
@@ -110,14 +110,14 @@ QUnit.test('exists', function (assert) {
 });
 
 QUnit.test('has a default value', function (assert) {
-    assert.ok(DomNavigator.defaults.left, 'should have a default value: ' + DomNavigator.defaults.left);
+    assert.ok(DomNavigator.DEFAULTS.left, 'should have a default value: ' + DomNavigator.DEFAULTS.left);
 });
 
 QUnit.test('move the selection to the element at left', function (assert) {
-    var selected = '.' + DomNavigator.defaults.selected;
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var left = DomNavigator.defaults.left;
+    var left = DomNavigator.DEFAULTS.left;
 
     simulateKeyDown(document, left);
     assert.ok(this.target.children().eq(0).is(selected), 'should select first element when navigation has not started.');
@@ -143,14 +143,14 @@ QUnit.test('exists', function (assert) {
 });
 
 QUnit.test('has a default value', function (assert) {
-    assert.ok(DomNavigator.defaults.up, 'The default value for up should exist');
+    assert.ok(DomNavigator.DEFAULTS.up, 'The default value for up should exist');
 });
 
 QUnit.test('move the selection to the element at up', function (assert) {
-    var selected = '.' + DomNavigator.defaults.selected;
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var up = DomNavigator.defaults.up;
+    var up = DomNavigator.DEFAULTS.up;
 
     simulateKeyDown(document, up);
     assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
@@ -176,14 +176,14 @@ QUnit.test('exists', function (assert) {
 });
 
 QUnit.test('has a default value', function (assert) {
-    assert.ok(DomNavigator.defaults.right, 'The default value for right should exist');
+    assert.ok(DomNavigator.DEFAULTS.right, 'The default value for right should exist');
 });
 
 QUnit.test('move the selection to the element at right', function (assert) {
-    var selected = '.' + DomNavigator.defaults.selected;
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var right = DomNavigator.defaults.right;
+    var right = DomNavigator.DEFAULTS.right;
 
     simulateKeyDown(document, right);
     assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
@@ -210,14 +210,14 @@ QUnit.test('exists', function (assert) {
 });
 
 QUnit.test('has a default value', function (assert) {
-    assert.ok(DomNavigator.defaults.down, 'The default value for down should exist');
+    assert.ok(DomNavigator.DEFAULTS.down, 'The default value for down should exist');
 });
 
 QUnit.test('move the selection to the element at down', function (assert) {
-    var selected = '.' + DomNavigator.defaults.selected;
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
-    // Create keydown event.
-    var down = DomNavigator.defaults.down;
+    // Create key down event.
+    var down = DomNavigator.DEFAULTS.down;
 
     simulateKeyDown(document, down);
     assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');

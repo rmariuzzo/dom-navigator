@@ -85,11 +85,11 @@
                 },
                 src: {
                     files: '<%= jshint.src %>',
-                    tasks: ['test']
+                    tasks: ['jshint', 'babel', 'qunit']
                 },
                 test: {
                     files: '<%= jshint.test %>',
-                    tasks: ['test']
+                    tasks: ['jshint', 'babel', 'qunit']
                 }
             },
 
