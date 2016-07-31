@@ -11,8 +11,9 @@
     "boss": true,
     "eqnull": true,
     "browser": true,
-    "esnext": true,
+    "esversion": 6,
     "predef": [
+        "$",
         "jQuery",
         "QUnit",
         "DomNavigator"
