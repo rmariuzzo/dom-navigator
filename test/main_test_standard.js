@@ -1,240 +1,244 @@
-(function($) {
+QUnit.start();
 
-  var lifecycle = {
-    setup: function() {
-      this.target = $(document.querySelector('#qunit-fixture ul'));
-      this.domNavigator = new DomNavigator(this.target[0]);
+var lifecycle = {
+    beforeEach: function () {
+        this.target = $(document.querySelector('#qunit-fixture ul'));
+        this.domNavigator = new window.DomNavigator(this.target[0]);
     },
-    teardown: function() {
-      this.domNavigator.destroy();
+    afterEach: function () {
+        this.domNavigator.destroy();
     }
-  };
+};
 
-  function simulateKeydown(element, which) {
+/**
+ * Simulate a key down event over an element.
+ *
+ * @param {Object} element The DOM element.
+ * @param {Object} which
+ */
+function simulateKeyDown(element, which) {
     var event;
 
     if (document.createEvent) {
-      event = document.createEvent("HTMLEvents");
-      event.initEvent('keydown', true, true);
+        event = document.createEvent('HTMLEvents');
+        event.initEvent('keydown', true, true);
     } else {
-      event = document.createEventObject();
-      event.eventType = 'keydown';
+        event = document.createEventObject();
+        event.eventType = 'keydown';
     }
 
     event.eventName = 'keydown';
     event.which = which;
 
     if (document.createEvent) {
-      element.dispatchEvent(event);
+        element.dispatchEvent(event);
     } else {
-      element.fireEvent('on' + event.eventType, event);
+        element.fireEvent('on' + event.eventType, event);
     }
-  }
+}
 
-  module('DomNavigator', lifecycle);
+QUnit.module('DomNavigator', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator, 'should exists');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator, 'should exists');
+});
 
-  module('DomNavigator.select()', lifecycle);
+QUnit.module('DomNavigator.select()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.select, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.select, 'should exist');
+});
 
-  test('select given element', function() {
-    var selected = '.' + DomNavigator.defaults.selected;
+QUnit.test('select given element', function (assert) {
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
     var domNavigator = this.domNavigator;
 
-    this.target.children().each(function(i, el) {
-      domNavigator.select(el);
-      ok($(el).is(selected), 'DOM element should be selected');
+    this.target.children().each(function (i, el) {
+        domNavigator.select(el);
+        assert.ok($(el).is(selected), 'DOM element should be selected');
     });
 
-    this.target.children().each(function(i, el) {
-      domNavigator.select(el);
-      ok($(el).is(selected), 'jQuery element should be selected');
+    this.target.children().each(function (i, el) {
+        domNavigator.select(el);
+        assert.ok($(el).is(selected), 'jQuery element should be selected');
     });
-  });
+});
 
-  module('DomNavigator.selected()', lifecycle);
+QUnit.module('DomNavigator.selected()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.selected, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.selected, 'should exist');
+});
 
-  test('return expected values', function() {
+QUnit.test('return expected values', function (assert) {
     var domNavigator = this.domNavigator;
 
-    ok(this.domNavigator.selected() === null, 'should return null after initialization');
+    assert.ok(this.domNavigator.selected() === null, 'should return null after initialization');
 
-    this.target.children().each(function(i, el) {
-      domNavigator.select(el);
-      ok(domNavigator.selected() === el, 'should select the given element');
+    this.target.children().each(function (i, el) {
+        domNavigator.select(el);
+        assert.ok(domNavigator.selected() === el, 'should select the given element');
     });
-  });
+});
 
-  module('DomNavigator.inContainerViewport()', lifecycle);
+QUnit.module('DomNavigator.inContainerViewport()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.inContainerViewport, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.inContainerViewport, 'should exist');
+});
 
-  test('should return expected values', function() {
+QUnit.test('should return expected values', function (assert) {
     var domNavigator = this.domNavigator;
     var contTop = this.target[0].offsetTop;
     var contBottom = contTop + this.target[0].offsetHeight;
     var contScroll = this.target[0].scrollTop;
 
-    this.target.children().each(function(i, el) {
-      var elTop = el.offsetTop;
-      var elBottom = elTop + el.offsetHeight;
-      var expected = elTop - contScroll >= contTop;
+    this.target.children().each(function (i, el) {
+        var elTop = el.offsetTop;
+        var elBottom = elTop + el.offsetHeight;
+        var expected = elTop - contScroll >= contTop;
 
-      expected = expected && elBottom - contScroll <= contBottom;
-      ok(domNavigator.inContainerViewport(el) === expected, 'should return: ' + expected + ' for element: ' + el.textContent);
+        expected = expected && elBottom - contScroll <= contBottom;
+        assert.ok(domNavigator.inContainerViewport(el) === expected, 'should return: ' + expected + ' for element: ' + el.textContent);
     });
-  });
+});
 
-  module('DomNavigator.left()', lifecycle);
+QUnit.module('DomNavigator.left()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.left, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.left, 'should exist');
+});
 
-  test('has a default value', function() {
-    ok(DomNavigator.defaults.left, 'should have a default value: ' + DomNavigator.defaults.left);
-  });
+QUnit.test('has a default value', function (assert) {
+    assert.ok(DomNavigator.DEFAULTS.left, 'should have a default value: ' + DomNavigator.DEFAULTS.left);
+});
 
-  test('move the selection to the element at left', function() {
-    var selected = '.' + DomNavigator.defaults.selected;
+QUnit.test('move the selection to the element at left', function (assert) {
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var left = DomNavigator.defaults.left;
+    var left = DomNavigator.DEFAULTS.left;
 
-    simulateKeydown(document, left);
-    ok(this.target.children().eq(0).is(selected), 'should select first element when navigation has not started.');
+    simulateKeyDown(document, left);
+    assert.ok(this.target.children().eq(0).is(selected), 'should select first element when navigation has not started.');
 
-    simulateKeydown(document, left);
-    ok(this.target.children().eq(0).is(selected), 'should remain selected if cannot navigate to left.');
+    simulateKeyDown(document, left);
+    assert.ok(this.target.children().eq(0).is(selected), 'should remain selected if cannot navigate to left.');
 
     for (var x = 0; x <= 2; x++) {
-      var from = 2 + (x * 3);
-      this.domNavigator.select(this.target.children()[from]);
-      for (var y = 1; y <= 2; y++) {
-        var el = this.target.children().eq(from - y);
-        simulateKeydown(document, left);
-        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
-      }
+        var from = 2 + (x * 3);
+        this.domNavigator.select(this.target.children()[from]);
+        for (var y = 1; y <= 2; y++) {
+            var el = this.target.children().eq(from - y);
+            simulateKeyDown(document, left);
+            assert.ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
+        }
     }
-  });
+});
 
-  module('DomNavigator.up()', lifecycle);
+QUnit.module('DomNavigator.up()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.up, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.up, 'should exist');
+});
 
-  test('has a default value', function() {
-    ok(DomNavigator.defaults.up, 'The default value for up should exist');
-  });
+QUnit.test('has a default value', function (assert) {
+    assert.ok(DomNavigator.DEFAULTS.up, 'The default value for up should exist');
+});
 
-  test('move the selection to the element at up', function() {
-    var selected = '.' + DomNavigator.defaults.selected;
+QUnit.test('move the selection to the element at up', function (assert) {
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var up = DomNavigator.defaults.up;
+    var up = DomNavigator.DEFAULTS.up;
 
-    simulateKeydown(document, up);
-    ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
+    simulateKeyDown(document, up);
+    assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
 
-    simulateKeydown(document, up);
-    ok(this.target.children().eq(0).is(selected), 'The 1st element should remain selected if already selected.');
+    simulateKeyDown(document, up);
+    assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should remain selected if already selected.');
 
     for (var x = 6; x <= 8; x++) {
-      var from = x;
-      this.domNavigator.select(this.target.children()[from]);
-      for (var y = 1; y <= 2; y++) {
-        var el = this.target.children().eq(from - (y * 3));
-        simulateKeydown(document, up);
-        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
-      }
+        var from = x;
+        this.domNavigator.select(this.target.children()[from]);
+        for (var y = 1; y <= 2; y++) {
+            var el = this.target.children().eq(from - (y * 3));
+            simulateKeyDown(document, up);
+            assert.ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
+        }
     }
-  });
+});
 
-  module('DomNavigator.right()', lifecycle);
+QUnit.module('DomNavigator.right()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.right, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.right, 'should exist');
+});
 
-  test('has a default value', function() {
-    ok(DomNavigator.defaults.right, 'The default value for right should exist');
-  });
+QUnit.test('has a default value', function (assert) {
+    assert.ok(DomNavigator.DEFAULTS.right, 'The default value for right should exist');
+});
 
-  test('move the selection to the element at right', function() {
-    var selected = '.' + DomNavigator.defaults.selected;
+QUnit.test('move the selection to the element at right', function (assert) {
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
 
     // Create keydown event.
-    var right = DomNavigator.defaults.right;
+    var right = DomNavigator.DEFAULTS.right;
 
-    simulateKeydown(document, right);
-    ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
+    simulateKeyDown(document, right);
+    assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
 
-    simulateKeydown(document, right);
-    ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
-    ok(this.target.children().eq(1).is(selected), 'The 2nd element should be selected when navigating to the right from 1st element.');
-
-    for (var x = 0; x <= 2; x++) {
-      var from = x * 3;
-      this.domNavigator.select(this.target.children()[from]);
-      for (var y = 1; y <= 2; y++) {
-        var el = this.target.children().eq(from + y);
-        simulateKeydown(document, right);
-        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
-      }
-    }
-  });
-
-  module('DomNavigator.down()', lifecycle);
-
-  test('exists', function() {
-    ok(DomNavigator.prototype.down, 'should exist');
-  });
-
-  test('has a default value', function() {
-    ok(DomNavigator.defaults.down, 'The default value for down should exist');
-  });
-
-  test('move the selection to the element at down', function() {
-    var selected = '.' + DomNavigator.defaults.selected;
-
-    // Create keydown event.
-    var down = DomNavigator.defaults.down;
-
-    simulateKeydown(document, down);
-    ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
-
-    simulateKeydown(document, down);
-    ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
-    ok(this.target.children().eq(3).is(selected), 'The 4th element should be selected when navigating to the down from 1st element.');
+    simulateKeyDown(document, right);
+    assert.ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
+    assert.ok(this.target.children().eq(1).is(selected), 'The 2nd element should be selected when navigating to the right from 1st element.');
 
     for (var x = 0; x <= 2; x++) {
-      var from = x;
-      this.domNavigator.select(this.target.children()[from]);
-      for (var y = 1; y <= 2; y++) {
-        var el = this.target.children().eq(from + (y * 3));
-        simulateKeydown(document, down);
-        ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
-      }
+        var from = x * 3;
+        this.domNavigator.select(this.target.children()[from]);
+        for (var y = 1; y <= 2; y++) {
+            var el = this.target.children().eq(from + y);
+            simulateKeyDown(document, right);
+            assert.ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
+        }
     }
-  });
+});
 
-  module('DomNavigator.destroy()', lifecycle);
+QUnit.module('DomNavigator.down()', lifecycle);
 
-  test('exists', function() {
-    ok(DomNavigator.prototype.destroy, 'should exist');
-  });
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.down, 'should exist');
+});
 
-}(jQuery));
+QUnit.test('has a default value', function (assert) {
+    assert.ok(DomNavigator.DEFAULTS.down, 'The default value for down should exist');
+});
+
+QUnit.test('move the selection to the element at down', function (assert) {
+    var selected = '.' + DomNavigator.DEFAULTS.selected;
+
+    // Create key down event.
+    var down = DomNavigator.DEFAULTS.down;
+
+    simulateKeyDown(document, down);
+    assert.ok(this.target.children().eq(0).is(selected), 'The 1st element should be selected when navigation has not started.');
+
+    simulateKeyDown(document, down);
+    assert.ok(!this.target.children().eq(0).is(selected), 'The 1st element should not remain selected if already selected.');
+    assert.ok(this.target.children().eq(3).is(selected), 'The 4th element should be selected when navigating to the down from 1st element.');
+
+    for (var x = 0; x <= 2; x++) {
+        var from = x;
+        this.domNavigator.select(this.target.children()[from]);
+        for (var y = 1; y <= 2; y++) {
+            var el = this.target.children().eq(from + (y * 3));
+            simulateKeyDown(document, down);
+            assert.ok(el.is(selected), 'should select: ' + el.textContent + ', selected: ' + this.domNavigator.selected().textContent);
+        }
+    }
+});
+
+QUnit.module('DomNavigator.destroy()', lifecycle);
+
+QUnit.test('exists', function (assert) {
+    assert.ok(DomNavigator.prototype.destroy, 'should exist');
+});
