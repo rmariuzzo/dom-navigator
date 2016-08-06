@@ -49,7 +49,6 @@ All help are more than welcome!
 
  - [Node.js](http://nodejs.org/).
  - [Grunt](http://gruntjs.com/).
- - [Bower](http://bower.io/).
 
 #### Development Workflow
 
