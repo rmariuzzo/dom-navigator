@@ -2,7 +2,8 @@ QUnit.start();
 
 var lifecycle = {
     beforeEach: function () {
-        this.target = $(document.querySelector('#qunit-fixture ul'));
+        this.selector = '#qunit-fixture ul';
+        this.target = $(document.querySelector(this.selector));
         this.domNavigator = new window.DomNavigator(this.target[0]);
     },
     afterEach: function () {
@@ -41,6 +42,13 @@ QUnit.module('DomNavigator', lifecycle);
 
 QUnit.test('exists', function (assert) {
     assert.ok(DomNavigator, 'should exists');
+});
+
+QUnit.test('supports query selector', function (assert) {
+    var domNavigatorByQuerySelector = new window.DomNavigator(this.selector);
+    var domNavigatorByElement = new window.DomNavigator(document.querySelector(this.selector));
+
+    assert.ok(domNavigatorByElement.$container.isSameNode(domNavigatorByQuerySelector.$container), 'should be the same element');
 });
 
 QUnit.module('DomNavigator.select()', lifecycle);

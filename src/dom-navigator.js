@@ -188,14 +188,14 @@
         /**
          * Create a new DOM Navigator.
          *
-         * @param container {Element} The container of the element to navigate.
+         * @param container {Element|String} The container or container query selector of the element to navigate.
          * @param options {Object} The options to configure the DOM navigator.
          *
          * @return void.
          */
         constructor(container, options) {
             this.$doc = window.document;
-            this.$container = container;
+            this.$container = typeof container === 'string' ? document.querySelector(container) : container;
             this.$options = extend({}, DomNavigator.DEFAULTS, options);
             this.init();
         }

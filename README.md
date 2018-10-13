@@ -30,6 +30,9 @@ npm install dom-navigator --save
 ```js
 var el = document.querySelector('#grid');
 new DomNavigator(el);
+
+// or use query selector
+new DomNavigator('#grid');
 ```
 
 #### jQuery
